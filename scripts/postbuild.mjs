@@ -79,14 +79,14 @@ for (const page of keywordPages) {
         '@type': 'WebPage',
         name: title,
         description: page.description,
-        url: `${origin}${page.path}`,
+        url: buildCanonicalUrl(page.path),
       },
       {
         '@context': 'https://schema.org',
         '@type': 'BreadcrumbList',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Home', item: `${origin}/` },
-          { '@type': 'ListItem', position: 2, name: page.h1, item: `${origin}${page.path}` },
+          { '@type': 'ListItem', position: 2, name: page.h1, item: buildCanonicalUrl(page.path) },
         ],
       },
       {
@@ -116,7 +116,7 @@ await writeStaticPage('/pricing', {
       '@context': 'https://schema.org',
       '@type': 'OfferCatalog',
       name: '9router Space pricing',
-      url: `${origin}/pricing`,
+      url: buildCanonicalUrl('/pricing'),
     },
   ],
 })
@@ -252,7 +252,7 @@ async function writeStaticPage(routePath, page) {
 }
 
 function renderHtml({ title, description, robots, canonicalPath, rootHtml, structuredData }) {
-  const canonicalUrl = `${origin}${canonicalPath === '/' ? '/' : canonicalPath}`
+  const canonicalUrl = buildCanonicalUrl(canonicalPath)
   let html = sourceIndex
   html = html.replace(/<title>.*?<\/title>/s, `<title>${escapeHtml(title)}</title>`)
   html = upsertMeta(html, 'name', 'description', description)
@@ -394,7 +394,7 @@ function buildSitemapXml() {
       const priority = routePath === '/' ? '1.0' : routePath === '/privacy' || routePath === '/terms' ? '0.4' : routePath === '/pricing' ? '0.9' : '0.78'
       const changefreq = routePath === '/' || routePath === '/pricing' ? 'weekly' : 'monthly'
       return `  <url>
-    <loc>${origin}${routePath === '/' ? '/' : routePath}</loc>
+    <loc>${buildCanonicalUrl(routePath)}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
@@ -416,6 +416,10 @@ Disallow: /api/
 Disallow: /checkout/done
 Sitemap: ${origin}/sitemap.xml
 `
+}
+
+function buildCanonicalUrl(routePath) {
+  return `${origin}${routePath === '/' ? '/' : `${routePath}/`}`
 }
 
 function escapeHtml(value) {

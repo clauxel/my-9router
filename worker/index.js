@@ -317,8 +317,9 @@ function buildSitemapXml() {
     .map((path) => {
       const priority = path === '/' ? '1.0' : path === '/privacy' || path === '/terms' ? '0.4' : path === '/pricing' ? '0.9' : '0.78'
       const changefreq = path === '/' || path === '/pricing' ? 'weekly' : 'monthly'
+      const canonicalPath = path === '/' ? '/' : `${path}/`
       return `  <url>
-    <loc>${LIVE_ORIGIN}${path === '/' ? '/' : path}</loc>
+    <loc>${LIVE_ORIGIN}${canonicalPath}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>

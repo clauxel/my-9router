@@ -37,7 +37,9 @@ function resolveCanonicalOrigin(origin: string) {
 }
 
 function buildCanonicalUrl(origin: string, pathname: string) {
-  return new URL(normalizePathname(pathname), `${resolveCanonicalOrigin(origin)}/`).toString()
+  const normalized = normalizePathname(pathname)
+  const canonicalPath = normalized === '/' ? '/' : `${normalized}/`
+  return new URL(canonicalPath, `${resolveCanonicalOrigin(origin)}/`).toString()
 }
 
 function buildWebPageStructuredData(title: string, description: string, canonicalUrl: string): StructuredDataRecord {
