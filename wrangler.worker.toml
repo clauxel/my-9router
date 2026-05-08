@@ -1,0 +1,34 @@
+name = "my-9router"
+main = "worker/index.js"
+compatibility_date = "2026-05-08"
+workers_dev = true
+routes = [
+  { pattern = "9router.space/*", zone_name = "9router.space" },
+  { pattern = "www.9router.space/*", zone_name = "9router.space" }
+]
+
+[vars]
+CREEM_API_BASE = "https://api.creem.io"
+CREEM_ENV = "live"
+
+[assets]
+directory = "./dist"
+binding = "SITE_ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first = [
+  "/",
+  "/9router-github",
+  "/9router-docker",
+  "/9router-npm",
+  "/9router-install",
+  "/9router-ai",
+  "/9router-codex",
+  "/9router-antigravity",
+  "/9router-cursor",
+  "/pricing",
+  "/privacy",
+  "/terms",
+  "/sitemap.xml",
+  "/robots.txt",
+  "/api/*"
+]
