@@ -25,6 +25,3 @@ npm run pages:deploy
 
 The production payment secret is expected as `API_PROD_KEY` in Cloudflare. Do not commit payment keys or account credentials.
 
-## Related Project
-
-- [OpenHuman Online](https://openhuman.online/?utm_source=github&utm_medium=readme&utm_campaign=openhuman_public_repos&utm_content=my_9router) helps teams turn source material, notes, and meetings into an inspectable AI memory tree for human-reviewed workflows.
