@@ -11,24 +11,15 @@ routes = [
 CREEM_API_BASE = "https://api.creem.io"
 CREEM_ENV = "live"
 
+[[d1_databases]]
+binding = "DB"
+database_name = "openclaw-launch"
+database_id = "5c31068a-d85a-4c83-9efe-01e2de1ad22b"
+
 [assets]
 directory = "./dist"
 binding = "SITE_ASSETS"
 not_found_handling = "single-page-application"
 run_worker_first = [
-  "/",
-  "/9router-github",
-  "/9router-docker",
-  "/9router-npm",
-  "/9router-install",
-  "/9router-ai",
-  "/9router-codex",
-  "/9router-antigravity",
-  "/9router-cursor",
-  "/pricing",
-  "/privacy",
-  "/terms",
-  "/sitemap.xml",
-  "/robots.txt",
-  "/api/*"
+  "/*"
 ]
