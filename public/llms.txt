@@ -1,0 +1,21 @@
+# 9router Space
+
+Plan a managed 9router rollout for Codex, Cursor, Antigravity, Docker, npm installs, fallback models, token savings, and AI routing operations.
+
+Website: https://9router.space/
+Pricing: https://9router.space/pricing/
+Checkout: https://9router.space/checkout/
+Support: support@aigeamy.com
+Type: Hosted SaaS workflow product
+
+Problem:
+- Teams need a quotable product definition, pricing path, evidence trail, and checkout route.
+
+Solution:
+- 9router Space provides a hosted workflow with public pricing, structured evidence, support contact, and report or receipt outputs.
+
+Useful pages:
+- Home: https://9router.space/
+- Pricing: https://9router.space/pricing/
+- Resources: https://9router.space/resources/
+- Sitemap: https://9router.space/sitemap.xml

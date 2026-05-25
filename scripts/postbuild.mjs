@@ -11,9 +11,9 @@ const sourceIndexPath = path.join(distDir, 'index.html')
 const keywordSourcePath = path.join(rootDir, 'src', 'content', 'keyword-pages.ts')
 const origin = 'https://9router.space'
 const siteName = '9router Space'
-const defaultTitle = '9router Space | AI Router Control Plane'
+const defaultTitle = '9router Space - AI Router Control Plane for Codex, Cursor, and Models'
 const defaultDescription =
-  '9router Space helps teams plan a managed 9router rollout for Codex, Cursor, Antigravity, Docker, npm installs, fallback models, and token savings.'
+  'Plan a managed 9router rollout for Codex, Cursor, Antigravity, Docker, npm installs, fallback models, token savings, and AI routing operations.'
 
 const indexablePaths = [
   '/',
@@ -121,6 +121,23 @@ await writeStaticPage('/pricing', {
   ],
 })
 
+await writeStaticPage('/checkout', {
+  title: '9router Space Checkout | Pro Annual',
+  description: 'Start the 9router Space Pro annual checkout from a crawlable checkout landing page.',
+  robots: 'index,follow',
+  canonicalPath: '/checkout',
+  rootHtml: buildCheckoutPrerender(),
+  structuredData: [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: '9router Space checkout',
+      description: 'Start the 9router Space Pro annual checkout.',
+      url: buildCanonicalUrl('/checkout'),
+    },
+  ],
+})
+
 await writeStaticPage('/privacy', {
   title: `Privacy | ${siteName}`,
   description: 'How 9router Space handles analytics, checkout metadata, and managed-site interactions.',
@@ -223,6 +240,7 @@ await writeStaticPage('/checkout/done', {
 
 await fs.writeFile(path.join(distDir, 'sitemap.xml'), buildSitemapXml())
 await fs.writeFile(path.join(distDir, 'robots.txt'), buildRobotsTxt())
+await syncRoundSites()
 
 async function loadKeywordPages() {
   const source = await fs.readFile(keywordSourcePath, 'utf8')
@@ -332,6 +350,18 @@ function buildPricingPrerender() {
     </main>`
 }
 
+function buildCheckoutPrerender() {
+  return `
+    <main class="nr-main">
+      <section class="nr-pricing-page-hero">
+        <p class="nr-eyebrow">Checkout</p>
+        <h1>Start with 9router Space Pro annual.</h1>
+        <p class="nr-lede">Use the managed checkout path for a crawlable fallback, then complete payment from the hosted pricing flow.</p>
+        <p><a class="nr-btn nr-btn-primary" href="/pricing">Continue to pricing and checkout</a></p>
+      </section>
+    </main>`
+}
+
 function buildKeywordPrerender(page) {
   const sections = page.sections
     .map(
@@ -420,6 +450,134 @@ Sitemap: ${origin}/sitemap.xml
 
 function buildCanonicalUrl(routePath) {
   return `${origin}${routePath === '/' ? '/' : `${routePath}/`}`
+}
+
+async function syncRoundSites() {
+  const workspaceRoot = path.resolve(rootDir, '..')
+  const round18Projects = [
+    'agentichtmlexportqa',
+    'agentskillupdategate',
+    'aistudioworkspaceapproval',
+    'antigravityextensiongate',
+    'geminisparktaskboard',
+    'opendesignguard',
+    'semblecodesearchgate',
+    'speckitacceptance',
+    'veocreditwaste',
+    'webmcpactionreceipt',
+  ]
+
+  for (const project of round18Projects) {
+    await copyPublicSite(project, path.join(distDir, '_round18', project))
+  }
+
+  const round22StaticProjects = [
+    { project: 'codegraphcontext', sourceDir: path.join(workspaceRoot, 'codegraphcontext') },
+    { project: 'openlitops', sourceDir: path.join(workspaceRoot, 'openlitops') },
+    { project: 'bifrostgateway', sourceDir: path.join(workspaceRoot, 'bifrostgateway') },
+    { project: 'fastmcpruntime', sourceDir: path.join(workspaceRoot, 'fastmcpruntime') },
+    { project: 'agentmemorymcp', sourceDir: path.join(workspaceRoot, 'agentmemorymcp') },
+    { project: 'cozeloopops', sourceDir: path.join(workspaceRoot, 'cozeloopops') },
+    { project: 'pydanticcontract', sourceDir: path.join(workspaceRoot, 'pydanticcontract') },
+    { project: 'clianythingharness', sourceDir: path.join(workspaceRoot, 'clianythingharness') },
+    { project: 'hermesagentrun', sourceDir: path.join(workspaceRoot, 'hermesagentrun') },
+    { project: 'mastraworkflow', sourceDir: path.join(workspaceRoot, 'mastraworkflow') },
+    { project: 'vibecoding', sourceDir: path.join(rootDir, 'worker', 'round22', 'vibecoding') },
+  ]
+
+  for (const entry of round22StaticProjects) {
+    await copyPublicSiteFrom(entry.sourceDir, path.join(distDir, '_round22', entry.project))
+  }
+
+  const round23StaticProjects = [
+    'agentscangate',
+    'webclawextract',
+    'bbbrowserstate',
+    'sbproxytraffic',
+    'mcpcsessionrelay',
+    'taskorchestratorgate',
+    'kreuzbergextract',
+    'novamirawpops',
+    'arkonknowledge',
+    'nextcloudteammcp',
+    'protocolanalyzerai',
+    'aidevkitworkflow',
+    'solaceagentmesh',
+    'inkeepagents',
+    'headroomcompress',
+  ]
+
+  for (const project of round23StaticProjects) {
+    await copyPublicSiteFrom(path.join(workspaceRoot, project), path.join(distDir, '_round23', project))
+  }
+
+  const round25StaticProjects = [
+    'rtkcontext',
+    'byterovermemory',
+    'chromedevtoolsmcp',
+    'agentmailrooms',
+    'axonhubgateway',
+    'jcodeharness',
+    'bumblebeereceipt',
+    'playwritermcp',
+    'coralquery',
+    'nexentagent',
+    'gomodelgateway',
+    'futureagievals',
+    'evalscopebench',
+    'autobrowserapproval',
+    'mcpgatewaydesk',
+  ]
+
+  for (const project of round25StaticProjects) {
+    await copyPublicSiteFrom(path.join(workspaceRoot, project), path.join(distDir, '_round25', project))
+  }
+
+  await copyPublicSiteFrom(path.join(workspaceRoot, 'Odoo', 'out'), path.join(distDir, '_round24', 'easyodoo'))
+  await copyPublicSiteFrom(
+    path.join(workspaceRoot, 'saas-management-platform', 'public'),
+    path.join(distDir, '_management', 'saas-manager'),
+  )
+
+  async function copyPublicSite(project, targetDir) {
+    const sourceDir = path.join(workspaceRoot, project)
+    return copyPublicSiteFrom(sourceDir, targetDir)
+  }
+
+  async function copyPublicSiteFrom(sourceDir, targetDir) {
+    await fs.rm(targetDir, { recursive: true, force: true })
+    await fs.mkdir(targetDir, { recursive: true })
+    await copyDirectory(sourceDir, targetDir)
+  }
+
+  async function copyDirectory(sourceDir, targetDir) {
+    const entries = await fs.readdir(sourceDir, { withFileTypes: true })
+    for (const entry of entries) {
+      if (shouldSkipRoundSiteEntry(entry.name)) continue
+      const sourcePath = path.join(sourceDir, entry.name)
+      const targetPath = path.join(targetDir, entry.name)
+      if (entry.isDirectory()) {
+        await fs.mkdir(targetPath, { recursive: true })
+        await copyDirectory(sourcePath, targetPath)
+      } else if (entry.isFile()) {
+        await fs.copyFile(sourcePath, targetPath)
+      }
+    }
+  }
+
+  function shouldSkipRoundSiteEntry(name) {
+    if (name === '.well-known') return false
+    if (name.startsWith('.')) return true
+    return [
+      'functions',
+      'worker',
+      'node_modules',
+      'package.json',
+      'package-lock.json',
+      'wrangler.toml',
+      'wrangler.worker.toml',
+    ].includes(name) || /^analytics-last-1d-/.test(name)
+  }
 }
 
 function escapeHtml(value) {

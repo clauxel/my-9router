@@ -4,7 +4,55 @@ compatibility_date = "2026-05-08"
 workers_dev = true
 routes = [
   { pattern = "9router.space/*", zone_name = "9router.space" },
-  { pattern = "www.9router.space/*", zone_name = "9router.space" }
+  { pattern = "www.9router.space/*", zone_name = "9router.space" },
+  { pattern = "saas-manager.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "agentichtmlexportqa.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "agentskillupdategate.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "aistudioworkspaceapproval.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "antigravityextensiongate.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "opendesignguard.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "semblecodesearchgate.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "speckitacceptance.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "veocreditwaste.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "webmcpactionreceipt.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "geminisparktaskboard.space/*", zone_name = "geminisparktaskboard.space" },
+  { pattern = "www.geminisparktaskboard.space/*", zone_name = "geminisparktaskboard.space" },
+  { pattern = "codegraphcontext.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "openlitops.space/*", zone_name = "openlitops.space" },
+  { pattern = "www.openlitops.space/*", zone_name = "openlitops.space" },
+  { pattern = "bifrostgateway.space/*", zone_name = "bifrostgateway.space" },
+  { pattern = "www.bifrostgateway.space/*", zone_name = "bifrostgateway.space" },
+  { pattern = "fastmcpruntime.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "agentmemorymcp.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "cozeloopops.space/*", zone_name = "cozeloopops.space" },
+  { pattern = "www.cozeloopops.space/*", zone_name = "cozeloopops.space" },
+  { pattern = "pydanticcontract.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "clianythingharness.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "hermesagentrun.space/*", zone_name = "hermesagentrun.space" },
+  { pattern = "www.hermesagentrun.space/*", zone_name = "hermesagentrun.space" },
+  { pattern = "mastraworkflow.space/*", zone_name = "mastraworkflow.space" },
+  { pattern = "www.mastraworkflow.space/*", zone_name = "mastraworkflow.space" },
+  { pattern = "vibe-coding.best/*", zone_name = "vibe-coding.best" },
+  { pattern = "www.vibe-coding.best/*", zone_name = "vibe-coding.best" },
+  { pattern = "agentscangate.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "webclawextract.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "bbbrowserstate.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "sbproxytraffic.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "mcpcsessionrelay.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "taskorchestratorgate.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "kreuzbergextract.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "novamirawpops.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "arkonknowledge.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "nextcloudteammcp.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "protocolanalyzerai.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "aidevkitworkflow.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "solaceagentmesh.space/*", zone_name = "solaceagentmesh.space" },
+  { pattern = "www.solaceagentmesh.space/*", zone_name = "solaceagentmesh.space" },
+  { pattern = "inkeepagents.space/*", zone_name = "inkeepagents.space" },
+  { pattern = "www.inkeepagents.space/*", zone_name = "inkeepagents.space" },
+  { pattern = "headroomcompress.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "easy-odoo.space/*", zone_name = "easy-odoo.space" },
+  { pattern = "www.easy-odoo.space/*", zone_name = "easy-odoo.space" }
 ]
 
 [vars]
@@ -15,6 +63,10 @@ CREEM_ENV = "live"
 binding = "DB"
 database_name = "openclaw-launch"
 database_id = "5c31068a-d85a-4c83-9efe-01e2de1ad22b"
+
+[[kv_namespaces]]
+binding = "SEO_GEO_CONTENT"
+id = "c6f412b828fe4077a2637f8440b2d1d8"
 
 [assets]
 directory = "./dist"

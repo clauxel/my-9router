@@ -20,6 +20,39 @@ import { handleRequest as handleRound22Pydanticcontract } from './round22/pydant
 import { handleRequest as handleRound22Clianythingharness } from './round22/clianythingharness/index.js'
 import { handleRequest as handleRound22Hermesagentrun } from './round22/hermesagentrun/index.js'
 import { handleRequest as handleRound22Mastraworkflow } from './round22/mastraworkflow/index.js'
+import { handleRequest as handleRound22Vibecoding } from './round22/vibecoding/index.js'
+import { handleRequest as handleRound23Agentscangate } from './round23/agentscangate/index.js'
+import { handleRequest as handleRound23Webclawextract } from './round23/webclawextract/index.js'
+import { handleRequest as handleRound23Bbbrowserstate } from './round23/bbbrowserstate/index.js'
+import { handleRequest as handleRound23Sbproxytraffic } from './round23/sbproxytraffic/index.js'
+import { handleRequest as handleRound23Mcpcsessionrelay } from './round23/mcpcsessionrelay/index.js'
+import { handleRequest as handleRound23Taskorchestratorgate } from './round23/taskorchestratorgate/index.js'
+import { handleRequest as handleRound23Kreuzbergextract } from './round23/kreuzbergextract/index.js'
+import { handleRequest as handleRound23Novamirawpops } from './round23/novamirawpops/index.js'
+import { handleRequest as handleRound23Arkonknowledge } from './round23/arkonknowledge/index.js'
+import { handleRequest as handleRound23Nextcloudteammcp } from './round23/nextcloudteammcp/index.js'
+import { handleRequest as handleRound23Protocolanalyzerai } from './round23/protocolanalyzerai/index.js'
+import { handleRequest as handleRound23Aidevkitworkflow } from './round23/aidevkitworkflow/index.js'
+import { handleRequest as handleRound23Solaceagentmesh } from './round23/solaceagentmesh/index.js'
+import { handleRequest as handleRound23Inkeepagents } from './round23/inkeepagents/index.js'
+import { handleRequest as handleRound23Headroomcompress } from './round23/headroomcompress/index.js'
+import { handleRequest as handleRound24Easyodoo } from './round24/easyodoo/index.js'
+import { handleRequest as handleRound25Rtkcontext } from './round25/rtkcontext/index.js'
+import { handleRequest as handleRound25Byterovermemory } from './round25/byterovermemory/index.js'
+import { handleRequest as handleRound25Chromedevtoolsmcp } from './round25/chromedevtoolsmcp/index.js'
+import { handleRequest as handleRound25Agentmailrooms } from './round25/agentmailrooms/index.js'
+import { handleRequest as handleRound25Axonhubgateway } from './round25/axonhubgateway/index.js'
+import { handleRequest as handleRound25Jcodeharness } from './round25/jcodeharness/index.js'
+import { handleRequest as handleRound25Bumblebeereceipt } from './round25/bumblebeereceipt/index.js'
+import { handleRequest as handleRound25Playwritermcp } from './round25/playwritermcp/index.js'
+import { handleRequest as handleRound25Coralquery } from './round25/coralquery/index.js'
+import { handleRequest as handleRound25Nexentagent } from './round25/nexentagent/index.js'
+import { handleRequest as handleRound25Gomodelgateway } from './round25/gomodelgateway/index.js'
+import { handleRequest as handleRound25Futureagievals } from './round25/futureagievals/index.js'
+import { handleRequest as handleRound25Evalscopebench } from './round25/evalscopebench/index.js'
+import { handleRequest as handleRound25Autobrowserapproval } from './round25/autobrowserapproval/index.js'
+import { handleRequest as handleRound25Mcpgatewaydesk } from './round25/mcpgatewaydesk/index.js'
+import { handleRequest as handleSaasManagementPlatform } from './management/saas-management-platform.js'
 
 const LIVE_ORIGIN = 'https://9router.space'
 const LIVE_HOST = '9router.space'
@@ -56,6 +89,54 @@ const round22Sites = new Map([
   ['www.hermesagentrun.space', { project: 'hermesagentrun', handler: handleRound22Hermesagentrun }],
   ['mastraworkflow.space', { project: 'mastraworkflow', handler: handleRound22Mastraworkflow }],
   ['www.mastraworkflow.space', { project: 'mastraworkflow', handler: handleRound22Mastraworkflow }],
+  ['vibe-coding.best', { project: 'vibecoding', handler: handleRound22Vibecoding }],
+  ['www.vibe-coding.best', { project: 'vibecoding', handler: handleRound22Vibecoding }],
+])
+
+const round23Sites = new Map([
+  ['agentscangate.clauxel.com', { project: 'agentscangate', handler: handleRound23Agentscangate }],
+  ['webclawextract.clauxel.com', { project: 'webclawextract', handler: handleRound23Webclawextract }],
+  ['bbbrowserstate.clauxel.com', { project: 'bbbrowserstate', handler: handleRound23Bbbrowserstate }],
+  ['sbproxytraffic.clauxel.com', { project: 'sbproxytraffic', handler: handleRound23Sbproxytraffic }],
+  ['mcpcsessionrelay.clauxel.com', { project: 'mcpcsessionrelay', handler: handleRound23Mcpcsessionrelay }],
+  ['taskorchestratorgate.clauxel.com', { project: 'taskorchestratorgate', handler: handleRound23Taskorchestratorgate }],
+  ['kreuzbergextract.clauxel.com', { project: 'kreuzbergextract', handler: handleRound23Kreuzbergextract }],
+  ['novamirawpops.clauxel.com', { project: 'novamirawpops', handler: handleRound23Novamirawpops }],
+  ['arkonknowledge.clauxel.com', { project: 'arkonknowledge', handler: handleRound23Arkonknowledge }],
+  ['nextcloudteammcp.clauxel.com', { project: 'nextcloudteammcp', handler: handleRound23Nextcloudteammcp }],
+  ['protocolanalyzerai.clauxel.com', { project: 'protocolanalyzerai', handler: handleRound23Protocolanalyzerai }],
+  ['aidevkitworkflow.clauxel.com', { project: 'aidevkitworkflow', handler: handleRound23Aidevkitworkflow }],
+  ['solaceagentmesh.space', { project: 'solaceagentmesh', handler: handleRound23Solaceagentmesh }],
+  ['www.solaceagentmesh.space', { project: 'solaceagentmesh', handler: handleRound23Solaceagentmesh }],
+  ['inkeepagents.space', { project: 'inkeepagents', handler: handleRound23Inkeepagents }],
+  ['www.inkeepagents.space', { project: 'inkeepagents', handler: handleRound23Inkeepagents }],
+  ['headroomcompress.clauxel.com', { project: 'headroomcompress', handler: handleRound23Headroomcompress }],
+])
+
+const round24Sites = new Map([
+  ['easy-odoo.space', { project: 'easyodoo', handler: handleRound24Easyodoo }],
+  ['www.easy-odoo.space', { project: 'easyodoo', handler: handleRound24Easyodoo }],
+])
+
+const round25Sites = new Map([
+  ['rtkcontext.clauxel.com', { project: 'rtkcontext', handler: handleRound25Rtkcontext }],
+  ['byterovermemory.clauxel.com', { project: 'byterovermemory', handler: handleRound25Byterovermemory }],
+  ['chromedevtoolsmcp.clauxel.com', { project: 'chromedevtoolsmcp', handler: handleRound25Chromedevtoolsmcp }],
+  ['agentmailrooms.clauxel.com', { project: 'agentmailrooms', handler: handleRound25Agentmailrooms }],
+  ['axonhubgateway.space', { project: 'axonhubgateway', handler: handleRound25Axonhubgateway }],
+  ['www.axonhubgateway.space', { project: 'axonhubgateway', handler: handleRound25Axonhubgateway }],
+  ['jcodeharness.clauxel.com', { project: 'jcodeharness', handler: handleRound25Jcodeharness }],
+  ['bumblebeereceipt.clauxel.com', { project: 'bumblebeereceipt', handler: handleRound25Bumblebeereceipt }],
+  ['playwritermcp.clauxel.com', { project: 'playwritermcp', handler: handleRound25Playwritermcp }],
+  ['coralquery.clauxel.com', { project: 'coralquery', handler: handleRound25Coralquery }],
+  ['nexentagent.space', { project: 'nexentagent', handler: handleRound25Nexentagent }],
+  ['www.nexentagent.space', { project: 'nexentagent', handler: handleRound25Nexentagent }],
+  ['gomodelgateway.space', { project: 'gomodelgateway', handler: handleRound25Gomodelgateway }],
+  ['www.gomodelgateway.space', { project: 'gomodelgateway', handler: handleRound25Gomodelgateway }],
+  ['futureagievals.clauxel.com', { project: 'futureagievals', handler: handleRound25Futureagievals }],
+  ['evalscopebench.clauxel.com', { project: 'evalscopebench', handler: handleRound25Evalscopebench }],
+  ['autobrowserapproval.clauxel.com', { project: 'autobrowserapproval', handler: handleRound25Autobrowserapproval }],
+  ['mcpgatewaydesk.clauxel.com', { project: 'mcpgatewaydesk', handler: handleRound25Mcpgatewaydesk }],
 ])
 
 const creemProductCache = new Map()
@@ -99,7 +180,7 @@ const indexablePaths = [
   '/terms',
 ]
 
-const staticAssetPaths = new Set([...indexablePaths, '/checkout/done'])
+const staticAssetPaths = new Set([...indexablePaths, '/checkout', '/checkout/done'])
 
 function securityHeaders(request) {
   const headers = new Headers({
@@ -590,6 +671,10 @@ async function fetchAsset(request, env) {
 
 export async function handleRequest(request, env) {
   const requestUrl = new URL(request.url)
+  if (requestUrl.hostname === 'saas-manager.clauxel.com') {
+    return handleSaasManagementPlatform(request, env, requestUrl)
+  }
+
   const round18 = round18Sites.get(requestUrl.hostname)
   if (round18) {
     const proofResponse = await handleRound18Proof(request, env, round18.project)
@@ -602,6 +687,25 @@ export async function handleRequest(request, env) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round22', round22.project)
     if (proofResponse) return proofResponse
     return round22.handler(request, roundSiteEnv(env, '_round22', round22.project), requestUrl)
+  }
+
+  const round23 = round23Sites.get(requestUrl.hostname)
+  if (round23) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_round23', round23.project)
+    if (proofResponse) return proofResponse
+    return round23.handler(request, roundSiteEnv(env, '_round23', round23.project), requestUrl)
+  }
+
+  const round24 = round24Sites.get(requestUrl.hostname)
+  if (round24) {
+    return round24.handler(request, roundSiteEnv(env, '_round24', round24.project), requestUrl)
+  }
+
+  const round25 = round25Sites.get(requestUrl.hostname)
+  if (round25) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_round25', round25.project)
+    if (proofResponse) return proofResponse
+    return round25.handler(request, roundSiteEnv(env, '_round25', round25.project), requestUrl)
   }
 
   if (request.method === 'OPTIONS') return handleOptions(request)
