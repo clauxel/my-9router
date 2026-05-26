@@ -58,6 +58,21 @@ import { handleRequest as handleRound25Autobrowserapproval } from './round25/aut
 import { handleRequest as handleRound25Mcpgatewaydesk } from './round25/mcpgatewaydesk/index.js'
 import { handleRequest as handleRound26Context7docs } from './round26/context7docs/index.js'
 import { handleRequest as handleRound26Nangointegrationops } from './round26/nangointegrationops/index.js'
+import { handleRequest as handleRound26Activepiecesworkflow } from './round26/activepiecesworkflow/index.js'
+import { handleRequest as handleRound26Skybridgepackager } from './round26/skybridgepackager/index.js'
+import { handleRequest as handleRound26Paperclipcompany } from './round26/paperclipcompany/index.js'
+import { handleRequest as handleRound26Dograhvoice } from './round26/dograhvoice/index.js'
+import { handleRequest as handleRound26Twentyrevenue } from './round26/twentyrevenue/index.js'
+import { handleRequest as handleRound26Dyadteambuilder } from './round26/dyadteambuilder/index.js'
+import { handleRequest as handleRound26Hyperframesrender } from './round26/hyperframesrender/index.js'
+import { handleRequest as handleRound26Agenticinboxdesk } from './round26/agenticinboxdesk/index.js'
+import { handleRequest as handleRound26Zerolangcompiler } from './round26/zerolangcompiler/index.js'
+import { handleRequest as handleRound26Voltagentconsole } from './round26/voltagentconsole/index.js'
+import { handleRequest as handleRound26Pptmasterdeck } from './round26/pptmasterdeck/index.js'
+import { handleRequest as handleRound26Coolifylaunch } from './round26/coolifylaunch/index.js'
+import { handleRequest as handleRound26Holaosworkstream } from './round26/holaosworkstream/index.js'
+import { handleRequest as handleRound26Shipswiftcomponents } from './round26/shipswiftcomponents/index.js'
+import { handleRequest as handleRound26Intentkitcluster } from './round26/intentkitcluster/index.js'
 import { handleRequest as handleSaasManagementPlatform } from './management/saas-management-platform.js'
 
 const LIVE_ORIGIN = 'https://9router.space'
@@ -176,12 +191,38 @@ const round26Sites = new Map([
   ['context7docs.clauxel.com', { project: 'context7docs', handler: handleRound26Context7docs }],
   ['nangointegrationops.space', { project: 'nangointegrationops', handler: handleRound26Nangointegrationops }],
   ['www.nangointegrationops.space', { project: 'nangointegrationops', handler: handleRound26Nangointegrationops }],
+  ['activepiecesworkflow.space', { project: 'activepiecesworkflow', handler: handleRound26Activepiecesworkflow }],
+  ['www.activepiecesworkflow.space', { project: 'activepiecesworkflow', handler: handleRound26Activepiecesworkflow }],
+  ['skybridgepackager.clauxel.com', { project: 'skybridgepackager', handler: handleRound26Skybridgepackager }],
+  ['paperclipcompany.space', { project: 'paperclipcompany', handler: handleRound26Paperclipcompany }],
+  ['www.paperclipcompany.space', { project: 'paperclipcompany', handler: handleRound26Paperclipcompany }],
+  ['dograhvoice.space', { project: 'dograhvoice', handler: handleRound26Dograhvoice }],
+  ['www.dograhvoice.space', { project: 'dograhvoice', handler: handleRound26Dograhvoice }],
+  ['twentyrevenue.space', { project: 'twentyrevenue', handler: handleRound26Twentyrevenue }],
+  ['www.twentyrevenue.space', { project: 'twentyrevenue', handler: handleRound26Twentyrevenue }],
+  ['dyadteambuilder.space', { project: 'dyadteambuilder', handler: handleRound26Dyadteambuilder }],
+  ['www.dyadteambuilder.space', { project: 'dyadteambuilder', handler: handleRound26Dyadteambuilder }],
+  ['hyperframesrender.clauxel.com', { project: 'hyperframesrender', handler: handleRound26Hyperframesrender }],
+  ['agenticinboxdesk.space', { project: 'agenticinboxdesk', handler: handleRound26Agenticinboxdesk }],
+  ['www.agenticinboxdesk.space', { project: 'agenticinboxdesk', handler: handleRound26Agenticinboxdesk }],
+  ['zerolangcompiler.clauxel.com', { project: 'zerolangcompiler', handler: handleRound26Zerolangcompiler }],
+  ['voltagentconsole.space', { project: 'voltagentconsole', handler: handleRound26Voltagentconsole }],
+  ['www.voltagentconsole.space', { project: 'voltagentconsole', handler: handleRound26Voltagentconsole }],
+  ['pptmasterdeck.clauxel.com', { project: 'pptmasterdeck', handler: handleRound26Pptmasterdeck }],
+  ['coolifylaunch.space', { project: 'coolifylaunch', handler: handleRound26Coolifylaunch }],
+  ['www.coolifylaunch.space', { project: 'coolifylaunch', handler: handleRound26Coolifylaunch }],
+  ['holaosworkstream.space', { project: 'holaosworkstream', handler: handleRound26Holaosworkstream }],
+  ['www.holaosworkstream.space', { project: 'holaosworkstream', handler: handleRound26Holaosworkstream }],
+  ['shipswiftcomponents.clauxel.com', { project: 'shipswiftcomponents', handler: handleRound26Shipswiftcomponents }],
+  ['intentkitcluster.space', { project: 'intentkitcluster', handler: handleRound26Intentkitcluster }],
+  ['www.intentkitcluster.space', { project: 'intentkitcluster', handler: handleRound26Intentkitcluster }],
 ])
 
 // <trendradar-diversified-site-map-2026-05-26>
 const diversifiedStaticSites = new Map([
   ['a2adependencyinspector.clauxel.com', { project: 'a2adependencyinspector' }],
   ['a2aidentitytoll.clauxel.com', { project: 'a2aidentitytoll' }],
+  ['a2areplayreceipt.clauxel.com', { project: 'a2areplayreceipt' }],
   ['agenthandoffsla.space', { project: 'agent-handoff-sla-board' }],
   ['www.agenthandoffsla.space', { project: 'agent-handoff-sla-board' }],
   ['agentdataboundary.clauxel.com', { project: 'agentdataboundary' }],
@@ -190,7 +231,12 @@ const diversifiedStaticSites = new Map([
   ['agentrollbackplan.space', { project: 'agentic-rollback-planbook' }],
   ['www.agentrollbackplan.space', { project: 'agentic-rollback-planbook' }],
   ['agenticbudgetrouter.clauxel.com', { project: 'agenticbudgetrouter' }],
+  ['agentichtmlexportqa.clauxel.com', { project: 'agentichtmlexportqa' }],
+  ['agentmailrooms.clauxel.com', { project: 'agentmailrooms' }],
+  ['agentmemorymcp.clauxel.com', { project: 'agentmemorymcp' }],
   ['agentmonitorrelay.clauxel.com', { project: 'agentmonitorrelay' }],
+  ['agentscangate.clauxel.com', { project: 'agentscangate' }],
+  ['agentskillupdategate.clauxel.com', { project: 'agentskillupdategate' }],
   ['evalbinderai.space', { project: 'ai-governance-eval-binder' }],
   ['www.evalbinderai.space', { project: 'ai-governance-eval-binder' }],
   ['aisourcefreshness.space', { project: 'ai-search-source-freshness' }],
@@ -199,61 +245,125 @@ const diversifiedStaticSites = new Map([
   ['www.returnpolicywatch.space', { project: 'ai-shopping-policy-watch' }],
   ['aiactdisclosuredesk.space', { project: 'aiactdisclosuredesk' }],
   ['www.aiactdisclosuredesk.space', { project: 'aiactdisclosuredesk' }],
+  ['aidevkitworkflow.clauxel.com', { project: 'aidevkitworkflow' }],
   ['aireviewsignal.space', { project: 'aireviewsignal' }],
   ['www.aireviewsignal.space', { project: 'aireviewsignal' }],
   ['aistudioandroidreleasegate.clauxel.com', { project: 'aistudioandroidreleasegate' }],
+  ['aistudioworkspaceapproval.clauxel.com', { project: 'aistudioworkspaceapproval' }],
   ['aiwaiverdesk.clauxel.com', { project: 'aiwaiverdesk' }],
   ['androidcliagentgate.clauxel.com', { project: 'androidcliagentgate' }],
+  ['antigravityextensiongate.clauxel.com', { project: 'antigravityextensiongate' }],
   ['antigravityrunledger.clauxel.com', { project: 'antigravityrunledger' }],
+  ['arkonknowledge.clauxel.com', { project: 'arkonknowledge' }],
+  ['autobrowserapproval.clauxel.com', { project: 'autobrowserapproval' }],
+  ['axonhubgateway.space', { project: 'axonhubgateway' }],
+  ['www.axonhubgateway.space', { project: 'axonhubgateway' }],
+  ['bbbrowserstate.clauxel.com', { project: 'bbbrowserstate' }],
+  ['bifrostgateway.space', { project: 'bifrostgateway' }],
+  ['www.bifrostgateway.space', { project: 'bifrostgateway' }],
   ['browserspendguard.clauxel.com', { project: 'browserspendguard' }],
+  ['bumblebeereceipt.clauxel.com', { project: 'bumblebeereceipt' }],
+  ['byterovermemory.clauxel.com', { project: 'byterovermemory' }],
+  ['c2padisclosure.clauxel.com', { project: 'c2padisclosure' }],
   ['c2paintake.clauxel.com', { project: 'c2paintake' }],
+  ['chromedevtoolsmcp.clauxel.com', { project: 'chromedevtoolsmcp' }],
+  ['claudecodereplacement.space', { project: 'claudecodereplacement' }],
+  ['www.claudecodereplacement.space', { project: 'claudecodereplacement' }],
+  ['clianythingharness.clauxel.com', { project: 'clianythingharness' }],
+  ['codegraphcontext.clauxel.com', { project: 'codegraphcontext' }],
   ['codexdeployreadiness.space', { project: 'codex-deploy-readiness' }],
   ['www.codexdeployreadiness.space', { project: 'codex-deploy-readiness' }],
   ['codexrunledger.clauxel.com', { project: 'codexrunledger' }],
+  ['context7docs.clauxel.com', { project: 'context7docs' }],
   ['copilotcliswitchgate.clauxel.com', { project: 'copilotcliswitchgate' }],
   ['copilotconnectorledger.clauxel.com', { project: 'copilotconnectorledger' }],
+  ['coralquery.clauxel.com', { project: 'coralquery' }],
+  ['cozeloopops.space', { project: 'cozeloopops' }],
+  ['www.cozeloopops.space', { project: 'cozeloopops' }],
   ['cursorcostlab.space', { project: 'cursor-composer-cost-lab' }],
   ['www.cursorcostlab.space', { project: 'cursor-composer-cost-lab' }],
   ['devinsessionboard.space', { project: 'devinsessionboard' }],
   ['www.devinsessionboard.space', { project: 'devinsessionboard' }],
+  ['evalscopebench.clauxel.com', { project: 'evalscopebench' }],
+  ['fastmcpruntime.clauxel.com', { project: 'fastmcpruntime' }],
+  ['futureagievals.clauxel.com', { project: 'futureagievals' }],
   ['geminicallreceipt.space', { project: 'geminicallreceipt' }],
   ['www.geminicallreceipt.space', { project: 'geminicallreceipt' }],
   ['geminiclimigrationdesk.space', { project: 'geminiclimigrationdesk' }],
   ['www.geminiclimigrationdesk.space', { project: 'geminiclimigrationdesk' }],
+  ['geminiomniapproval.space', { project: 'geminiomniapproval' }],
+  ['www.geminiomniapproval.space', { project: 'geminiomniapproval' }],
   ['geminiomnirights.clauxel.com', { project: 'geminiomnirights' }],
+  ['geminisparktaskboard.space', { project: 'geminisparktaskboard' }],
+  ['www.geminisparktaskboard.space', { project: 'geminisparktaskboard' }],
   ['geminiupgradeqa.clauxel.com', { project: 'geminiupgradeqa' }],
   ['genaispanmapper.clauxel.com', { project: 'genaispanmapper' }],
-  ['hermesagentrun.space', { project: 'hermesagentrun' }],
-  ['www.hermesagentrun.space', { project: 'hermesagentrun' }],
+  ['gomodelgateway.space', { project: 'gomodelgateway' }],
+  ['www.gomodelgateway.space', { project: 'gomodelgateway' }],
+  ['headroomcompress.clauxel.com', { project: 'headroomcompress' }],
+  ['hermesagentrun.clauxel.com', { project: 'hermesagentrun' }],
+  ['inkeepagents.space', { project: 'inkeepagents' }],
+  ['www.inkeepagents.space', { project: 'inkeepagents' }],
+  ['jcodeharness.clauxel.com', { project: 'jcodeharness' }],
   ['kirowebreleasebinder.clauxel.com', { project: 'kirowebreleasebinder' }],
+  ['kreuzbergextract.clauxel.com', { project: 'kreuzbergextract' }],
+  ['mastraworkflow.space', { project: 'mastraworkflow' }],
+  ['www.mastraworkflow.space', { project: 'mastraworkflow' }],
   ['mcpdirectoryradar.space', { project: 'mcp-directory-radar' }],
   ['www.mcpdirectoryradar.space', { project: 'mcp-directory-radar' }],
+  ['mcpcsessionrelay.clauxel.com', { project: 'mcpcsessionrelay' }],
+  ['mcpdeprecation.clauxel.com', { project: 'mcpdeprecation' }],
+  ['mcpgatewaydesk.clauxel.com', { project: 'mcpgatewaydesk' }],
   ['mcpoauthscopegate.clauxel.com', { project: 'mcpoauthscopegate' }],
   ['mcpscopeconsent.clauxel.com', { project: 'mcpscopeconsent' }],
   ['mcptoollicense.clauxel.com', { project: 'mcptoollicense' }],
   ['mcpuptimeledger.clauxel.com', { project: 'mcpuptimeledger' }],
+  ['nangointegrationops.space', { project: 'nangointegrationops' }],
+  ['www.nangointegrationops.space', { project: 'nangointegrationops' }],
+  ['nexentagent.space', { project: 'nexentagent' }],
+  ['www.nexentagent.space', { project: 'nexentagent' }],
+  ['nextcloudteammcp.clauxel.com', { project: 'nextcloudteammcp' }],
   ['notebooksourceqa.space', { project: 'notebooksourceqa' }],
   ['www.notebooksourceqa.space', { project: 'notebooksourceqa' }],
+  ['novamirawpops.clauxel.com', { project: 'novamirawpops' }],
   ['openagentwatch.space', { project: 'openagentwatch' }],
   ['www.openagentwatch.space', { project: 'openagentwatch' }],
+  ['opendesignguard.clauxel.com', { project: 'opendesignguard' }],
+  ['openlitops.space', { project: 'openlitops' }],
+  ['www.openlitops.space', { project: 'openlitops' }],
   ['playwrightselectorguard.clauxel.com', { project: 'playwrightselectorguard' }],
+  ['playwritermcp.clauxel.com', { project: 'playwritermcp' }],
   ['policyproofdesk.space', { project: 'policyproofdesk' }],
   ['www.policyproofdesk.space', { project: 'policyproofdesk' }],
   ['promptfixreceipt.space', { project: 'promptfixreceipt' }],
   ['www.promptfixreceipt.space', { project: 'promptfixreceipt' }],
+  ['protocolanalyzerai.clauxel.com', { project: 'protocolanalyzerai' }],
+  ['pydanticcontract.clauxel.com', { project: 'pydanticcontract' }],
+  ['rtkcontext.clauxel.com', { project: 'rtkcontext' }],
   ['safetyreplay.clauxel.com', { project: 'safety-replay-gate' }],
+  ['sbproxytraffic.clauxel.com', { project: 'sbproxytraffic' }],
   ['schemadriftgate.clauxel.com', { project: 'schema-drift-gate' }],
   ['searchpricewatch.space', { project: 'searchpricewatch' }],
   ['www.searchpricewatch.space', { project: 'searchpricewatch' }],
+  ['semblecodesearchgate.clauxel.com', { project: 'semblecodesearchgate' }],
   ['shopanswertrace.space', { project: 'shopanswertrace' }],
   ['www.shopanswertrace.space', { project: 'shopanswertrace' }],
+  ['solaceagentmesh.space', { project: 'solaceagentmesh' }],
+  ['www.solaceagentmesh.space', { project: 'solaceagentmesh' }],
+  ['speckitacceptance.clauxel.com', { project: 'speckitacceptance' }],
+  ['taskorchestratorgate.clauxel.com', { project: 'taskorchestratorgate' }],
   ['toolcallwitness.clauxel.com', { project: 'toolcallwitness' }],
   ['tracepiishield.clauxel.com', { project: 'tracepiishield' }],
   ['universalcartmerchantgate.clauxel.com', { project: 'universalcartmerchantgate' }],
+  ['veocreditwaste.clauxel.com', { project: 'veocreditwaste' }],
   ['veoscenecontinuity.space', { project: 'veoscenecontinuity' }],
   ['www.veoscenecontinuity.space', { project: 'veoscenecontinuity' }],
   ['videoclaimsqa.space', { project: 'videoclaimsqa' }],
   ['www.videoclaimsqa.space', { project: 'videoclaimsqa' }],
+  ['webclawextract.clauxel.com', { project: 'webclawextract' }],
+  ['webmcpactionreceipt.clauxel.com', { project: 'webmcpactionreceipt' }],
+  ['vibe-coding.best', { project: 'vibe-coding/dist' }],
+  ['www.vibe-coding.best', { project: 'vibe-coding/dist' }],
 ])
 // </trendradar-diversified-site-map-2026-05-26>
 
@@ -846,6 +956,15 @@ export async function handleRequest(request, env) {
     return handleStaticRoundSite(request, roundSiteEnv(env, '_vercel', vercelSite.project), requestUrl)
   }
 
+  // <trendradar-diversified-site-handler-2026-05-26>
+  const diversifiedSite = diversifiedStaticSites.get(requestUrl.hostname)
+  if (diversifiedSite) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_diversified', diversifiedSite.project)
+    if (proofResponse) return proofResponse
+    return handleStaticRoundSite(request, roundSiteEnv(env, '_diversified', diversifiedSite.project), requestUrl)
+  }
+  // </trendradar-diversified-site-handler-2026-05-26>
+
   const round17 = round17Sites.get(requestUrl.hostname)
   if (round17) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round17', round17.project)
@@ -899,15 +1018,6 @@ export async function handleRequest(request, env) {
     if (proofResponse) return proofResponse
     return round26.handler(request, roundSiteEnv(env, '_round26', round26.project), requestUrl)
   }
-
-  // <trendradar-diversified-site-handler-2026-05-26>
-  const diversifiedSite = diversifiedStaticSites.get(requestUrl.hostname)
-  if (diversifiedSite) {
-    const proofResponse = await handleRoundSiteProof(request, env, '_diversified', diversifiedSite.project)
-    if (proofResponse) return proofResponse
-    return handleStaticRoundSite(request, roundSiteEnv(env, '_diversified', diversifiedSite.project), requestUrl)
-  }
-  // </trendradar-diversified-site-handler-2026-05-26>
 
   if (request.method === 'OPTIONS') return handleOptions(request)
   if (requestUrl.pathname === '/api/nowpayments-checkout') {
