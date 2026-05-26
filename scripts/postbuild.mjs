@@ -548,6 +548,67 @@ async function syncRoundSites() {
     path.join(distDir, '_management', 'saas-manager'),
   )
 
+  // <trendradar-diversified-sites-2026-05-26>
+  // TrendRadar diversified static sites - 2026-05-26
+  const diversifiedStaticProjects = [
+    { project: 'a2adependencyinspector', sourceDir: path.join(workspaceRoot, 'a2adependencyinspector') },
+    { project: 'a2aidentitytoll', sourceDir: path.join(workspaceRoot, 'a2aidentitytoll') },
+    { project: 'agent-handoff-sla-board', sourceDir: path.join(workspaceRoot, 'agent-handoff-sla-board') },
+    { project: 'agentdataboundary', sourceDir: path.join(workspaceRoot, 'agentdataboundary') },
+    { project: 'agentearlyaccess', sourceDir: path.join(workspaceRoot, 'agentearlyaccess') },
+    { project: 'agentic-rollback-planbook', sourceDir: path.join(workspaceRoot, 'agentic-rollback-planbook') },
+    { project: 'agenticbudgetrouter', sourceDir: path.join(workspaceRoot, 'agenticbudgetrouter') },
+    { project: 'agentmonitorrelay', sourceDir: path.join(workspaceRoot, 'agentmonitorrelay') },
+    { project: 'ai-governance-eval-binder', sourceDir: path.join(workspaceRoot, 'ai-governance-eval-binder') },
+    { project: 'ai-search-source-freshness', sourceDir: path.join(workspaceRoot, 'ai-search-source-freshness') },
+    { project: 'ai-shopping-policy-watch', sourceDir: path.join(workspaceRoot, 'ai-shopping-policy-watch') },
+    { project: 'aiactdisclosuredesk', sourceDir: path.join(workspaceRoot, 'aiactdisclosuredesk') },
+    { project: 'aireviewsignal', sourceDir: path.join(workspaceRoot, 'aireviewsignal') },
+    { project: 'aistudioandroidreleasegate', sourceDir: path.join(workspaceRoot, 'aistudioandroidreleasegate') },
+    { project: 'aiwaiverdesk', sourceDir: path.join(workspaceRoot, 'aiwaiverdesk') },
+    { project: 'androidcliagentgate', sourceDir: path.join(workspaceRoot, 'androidcliagentgate') },
+    { project: 'antigravityrunledger', sourceDir: path.join(workspaceRoot, 'antigravityrunledger') },
+    { project: 'browserspendguard', sourceDir: path.join(workspaceRoot, 'browserspendguard') },
+    { project: 'c2paintake', sourceDir: path.join(workspaceRoot, 'c2paintake') },
+    { project: 'codex-deploy-readiness', sourceDir: path.join(workspaceRoot, 'codex-deploy-readiness') },
+    { project: 'codexrunledger', sourceDir: path.join(workspaceRoot, 'codexrunledger') },
+    { project: 'copilotcliswitchgate', sourceDir: path.join(workspaceRoot, 'copilotcliswitchgate') },
+    { project: 'copilotconnectorledger', sourceDir: path.join(workspaceRoot, 'copilotconnectorledger') },
+    { project: 'cursor-composer-cost-lab', sourceDir: path.join(workspaceRoot, 'cursor-composer-cost-lab') },
+    { project: 'devinsessionboard', sourceDir: path.join(workspaceRoot, 'devinsessionboard') },
+    { project: 'geminicallreceipt', sourceDir: path.join(workspaceRoot, 'geminicallreceipt') },
+    { project: 'geminiclimigrationdesk', sourceDir: path.join(workspaceRoot, 'geminiclimigrationdesk') },
+    { project: 'geminiomnirights', sourceDir: path.join(workspaceRoot, 'geminiomnirights') },
+    { project: 'geminiupgradeqa', sourceDir: path.join(workspaceRoot, 'geminiupgradeqa') },
+    { project: 'genaispanmapper', sourceDir: path.join(workspaceRoot, 'genaispanmapper') },
+    { project: 'hermesagentrun', sourceDir: path.join(workspaceRoot, 'hermesagentrun') },
+    { project: 'kirowebreleasebinder', sourceDir: path.join(workspaceRoot, 'kirowebreleasebinder') },
+    { project: 'mcp-directory-radar', sourceDir: path.join(workspaceRoot, 'mcp-directory-radar') },
+    { project: 'mcpoauthscopegate', sourceDir: path.join(workspaceRoot, 'mcpoauthscopegate') },
+    { project: 'mcpscopeconsent', sourceDir: path.join(workspaceRoot, 'mcpscopeconsent') },
+    { project: 'mcptoollicense', sourceDir: path.join(workspaceRoot, 'mcptoollicense') },
+    { project: 'mcpuptimeledger', sourceDir: path.join(workspaceRoot, 'mcpuptimeledger') },
+    { project: 'notebooksourceqa', sourceDir: path.join(workspaceRoot, 'notebooksourceqa') },
+    { project: 'openagentwatch', sourceDir: path.join(workspaceRoot, 'openagentwatch') },
+    { project: 'playwrightselectorguard', sourceDir: path.join(workspaceRoot, 'playwrightselectorguard') },
+    { project: 'policyproofdesk', sourceDir: path.join(workspaceRoot, 'policyproofdesk') },
+    { project: 'promptfixreceipt', sourceDir: path.join(workspaceRoot, 'promptfixreceipt') },
+    { project: 'safety-replay-gate', sourceDir: path.join(workspaceRoot, 'safety-replay-gate') },
+    { project: 'schema-drift-gate', sourceDir: path.join(workspaceRoot, 'schema-drift-gate') },
+    { project: 'searchpricewatch', sourceDir: path.join(workspaceRoot, 'searchpricewatch') },
+    { project: 'shopanswertrace', sourceDir: path.join(workspaceRoot, 'shopanswertrace') },
+    { project: 'toolcallwitness', sourceDir: path.join(workspaceRoot, 'toolcallwitness') },
+    { project: 'tracepiishield', sourceDir: path.join(workspaceRoot, 'tracepiishield') },
+    { project: 'universalcartmerchantgate', sourceDir: path.join(workspaceRoot, 'universalcartmerchantgate') },
+    { project: 'veoscenecontinuity', sourceDir: path.join(workspaceRoot, 'veoscenecontinuity') },
+    { project: 'videoclaimsqa', sourceDir: path.join(workspaceRoot, 'videoclaimsqa') },
+  ]
+
+  for (const entry of diversifiedStaticProjects) {
+    await copyPublicSiteFrom(entry.sourceDir, path.join(distDir, '_diversified', entry.project))
+  }
+  // </trendradar-diversified-sites-2026-05-26>
+
   async function copyPublicSite(project, targetDir) {
     const sourceDir = path.join(workspaceRoot, project)
     return copyPublicSiteFrom(sourceDir, targetDir)

@@ -1,5 +1,10 @@
 import { handleAnalyticsRequest } from './analytics.js'
 import { handleNowPaymentsCheckout } from './nowpayments.js'
+import { handleRequest as handleRound17Claudecodereplacement } from './round17/claudecodereplacement/index.js'
+import { handleRequest as handleRound17Geminiomniapproval } from './round17/geminiomniapproval/index.js'
+import { handleRequest as handleRound17A2areplayreceipt } from './round17/a2areplayreceipt/index.js'
+import { handleRequest as handleRound17C2padisclosure } from './round17/c2padisclosure/index.js'
+import { handleRequest as handleRound17Mcpdeprecation } from './round17/mcpdeprecation/index.js'
 import { handleRequest as handleRound18Webmcpactionreceipt } from './round18/webmcpactionreceipt/index.js'
 import { handleRequest as handleRound18Aistudioworkspaceapproval } from './round18/aistudioworkspaceapproval/index.js'
 import { handleRequest as handleRound18Agentskillupdategate } from './round18/agentskillupdategate/index.js'
@@ -18,7 +23,6 @@ import { handleRequest as handleRound22Agentmemorymcp } from './round22/agentmem
 import { handleRequest as handleRound22Cozeloopops } from './round22/cozeloopops/index.js'
 import { handleRequest as handleRound22Pydanticcontract } from './round22/pydanticcontract/index.js'
 import { handleRequest as handleRound22Clianythingharness } from './round22/clianythingharness/index.js'
-import { handleRequest as handleRound22Hermesagentrun } from './round22/hermesagentrun/index.js'
 import { handleRequest as handleRound22Mastraworkflow } from './round22/mastraworkflow/index.js'
 import { handleRequest as handleRound22Vibecoding } from './round22/vibecoding/index.js'
 import { handleRequest as handleRound23Agentscangate } from './round23/agentscangate/index.js'
@@ -61,6 +65,35 @@ const LIVE_HOST = '9router.space'
 const ALT_HOSTS = new Set(['www.9router.space'])
 const ANNUAL_DISCOUNT_MULTIPLIER = 0.5
 
+const vercelSites = new Map([
+  ['aireasoningbase.com', { project: 'aireasoningbase' }],
+  ['www.aireasoningbase.com', { project: 'aireasoningbase' }],
+  ['clauxel.com', { project: 'clauxel' }],
+  ['www.clauxel.com', { project: 'clauxel' }],
+  ['cc-switch.org', { project: 'ccswitch' }],
+  ['www.cc-switch.org', { project: 'ccswitch' }],
+  ['multica.uk', { project: 'multica' }],
+  ['www.multica.uk', { project: 'multica' }],
+  ['openclaude.clauxel.com', { project: 'openclaude' }],
+  ['www.openclaude.clauxel.com', { project: 'openclaude' }],
+  ['copaw.uk', { project: 'copaw' }],
+  ['www.copaw.uk', { project: 'copaw' }],
+  ['clawsimple.net', { project: 'clawsimple' }],
+  ['www.clawsimple.net', { project: 'clawsimple' }],
+])
+
+const round17Sites = new Map([
+  ['clauxel.com', { project: 'clauxel', handler: handleStaticRoundSite }],
+  ['www.clauxel.com', { project: 'clauxel', handler: handleStaticRoundSite }],
+  ['claudecodereplacement.space', { project: 'claudecodereplacement', handler: handleRound17Claudecodereplacement }],
+  ['www.claudecodereplacement.space', { project: 'claudecodereplacement', handler: handleRound17Claudecodereplacement }],
+  ['geminiomniapproval.space', { project: 'geminiomniapproval', handler: handleRound17Geminiomniapproval }],
+  ['www.geminiomniapproval.space', { project: 'geminiomniapproval', handler: handleRound17Geminiomniapproval }],
+  ['a2areplayreceipt.clauxel.com', { project: 'a2areplayreceipt', handler: handleRound17A2areplayreceipt }],
+  ['c2padisclosure.clauxel.com', { project: 'c2padisclosure', handler: handleRound17C2padisclosure }],
+  ['mcpdeprecation.clauxel.com', { project: 'mcpdeprecation', handler: handleRound17Mcpdeprecation }],
+])
+
 const round18Sites = new Map([
   ['webmcpactionreceipt.clauxel.com', { project: 'webmcpactionreceipt', handler: handleRound18Webmcpactionreceipt }],
   ['aistudioworkspaceapproval.clauxel.com', { project: 'aistudioworkspaceapproval', handler: handleRound18Aistudioworkspaceapproval }],
@@ -87,8 +120,6 @@ const round22Sites = new Map([
   ['www.cozeloopops.space', { project: 'cozeloopops', handler: handleRound22Cozeloopops }],
   ['pydanticcontract.clauxel.com', { project: 'pydanticcontract', handler: handleRound22Pydanticcontract }],
   ['clianythingharness.clauxel.com', { project: 'clianythingharness', handler: handleRound22Clianythingharness }],
-  ['hermesagentrun.space', { project: 'hermesagentrun', handler: handleRound22Hermesagentrun }],
-  ['www.hermesagentrun.space', { project: 'hermesagentrun', handler: handleRound22Hermesagentrun }],
   ['mastraworkflow.space', { project: 'mastraworkflow', handler: handleRound22Mastraworkflow }],
   ['www.mastraworkflow.space', { project: 'mastraworkflow', handler: handleRound22Mastraworkflow }],
   ['vibe-coding.best', { project: 'vibecoding', handler: handleRound22Vibecoding }],
@@ -146,6 +177,85 @@ const round26Sites = new Map([
   ['nangointegrationops.space', { project: 'nangointegrationops', handler: handleRound26Nangointegrationops }],
   ['www.nangointegrationops.space', { project: 'nangointegrationops', handler: handleRound26Nangointegrationops }],
 ])
+
+// <trendradar-diversified-site-map-2026-05-26>
+const diversifiedStaticSites = new Map([
+  ['a2adependencyinspector.clauxel.com', { project: 'a2adependencyinspector' }],
+  ['a2aidentitytoll.clauxel.com', { project: 'a2aidentitytoll' }],
+  ['agenthandoffsla.space', { project: 'agent-handoff-sla-board' }],
+  ['www.agenthandoffsla.space', { project: 'agent-handoff-sla-board' }],
+  ['agentdataboundary.clauxel.com', { project: 'agentdataboundary' }],
+  ['agentearlyaccess.space', { project: 'agentearlyaccess' }],
+  ['www.agentearlyaccess.space', { project: 'agentearlyaccess' }],
+  ['agentrollbackplan.space', { project: 'agentic-rollback-planbook' }],
+  ['www.agentrollbackplan.space', { project: 'agentic-rollback-planbook' }],
+  ['agenticbudgetrouter.clauxel.com', { project: 'agenticbudgetrouter' }],
+  ['agentmonitorrelay.clauxel.com', { project: 'agentmonitorrelay' }],
+  ['evalbinderai.space', { project: 'ai-governance-eval-binder' }],
+  ['www.evalbinderai.space', { project: 'ai-governance-eval-binder' }],
+  ['aisourcefreshness.space', { project: 'ai-search-source-freshness' }],
+  ['www.aisourcefreshness.space', { project: 'ai-search-source-freshness' }],
+  ['returnpolicywatch.space', { project: 'ai-shopping-policy-watch' }],
+  ['www.returnpolicywatch.space', { project: 'ai-shopping-policy-watch' }],
+  ['aiactdisclosuredesk.space', { project: 'aiactdisclosuredesk' }],
+  ['www.aiactdisclosuredesk.space', { project: 'aiactdisclosuredesk' }],
+  ['aireviewsignal.space', { project: 'aireviewsignal' }],
+  ['www.aireviewsignal.space', { project: 'aireviewsignal' }],
+  ['aistudioandroidreleasegate.clauxel.com', { project: 'aistudioandroidreleasegate' }],
+  ['aiwaiverdesk.clauxel.com', { project: 'aiwaiverdesk' }],
+  ['androidcliagentgate.clauxel.com', { project: 'androidcliagentgate' }],
+  ['antigravityrunledger.clauxel.com', { project: 'antigravityrunledger' }],
+  ['browserspendguard.clauxel.com', { project: 'browserspendguard' }],
+  ['c2paintake.clauxel.com', { project: 'c2paintake' }],
+  ['codexdeployreadiness.space', { project: 'codex-deploy-readiness' }],
+  ['www.codexdeployreadiness.space', { project: 'codex-deploy-readiness' }],
+  ['codexrunledger.clauxel.com', { project: 'codexrunledger' }],
+  ['copilotcliswitchgate.clauxel.com', { project: 'copilotcliswitchgate' }],
+  ['copilotconnectorledger.clauxel.com', { project: 'copilotconnectorledger' }],
+  ['cursorcostlab.space', { project: 'cursor-composer-cost-lab' }],
+  ['www.cursorcostlab.space', { project: 'cursor-composer-cost-lab' }],
+  ['devinsessionboard.space', { project: 'devinsessionboard' }],
+  ['www.devinsessionboard.space', { project: 'devinsessionboard' }],
+  ['geminicallreceipt.space', { project: 'geminicallreceipt' }],
+  ['www.geminicallreceipt.space', { project: 'geminicallreceipt' }],
+  ['geminiclimigrationdesk.space', { project: 'geminiclimigrationdesk' }],
+  ['www.geminiclimigrationdesk.space', { project: 'geminiclimigrationdesk' }],
+  ['geminiomnirights.clauxel.com', { project: 'geminiomnirights' }],
+  ['geminiupgradeqa.clauxel.com', { project: 'geminiupgradeqa' }],
+  ['genaispanmapper.clauxel.com', { project: 'genaispanmapper' }],
+  ['hermesagentrun.space', { project: 'hermesagentrun' }],
+  ['www.hermesagentrun.space', { project: 'hermesagentrun' }],
+  ['kirowebreleasebinder.clauxel.com', { project: 'kirowebreleasebinder' }],
+  ['mcpdirectoryradar.space', { project: 'mcp-directory-radar' }],
+  ['www.mcpdirectoryradar.space', { project: 'mcp-directory-radar' }],
+  ['mcpoauthscopegate.clauxel.com', { project: 'mcpoauthscopegate' }],
+  ['mcpscopeconsent.clauxel.com', { project: 'mcpscopeconsent' }],
+  ['mcptoollicense.clauxel.com', { project: 'mcptoollicense' }],
+  ['mcpuptimeledger.clauxel.com', { project: 'mcpuptimeledger' }],
+  ['notebooksourceqa.space', { project: 'notebooksourceqa' }],
+  ['www.notebooksourceqa.space', { project: 'notebooksourceqa' }],
+  ['openagentwatch.space', { project: 'openagentwatch' }],
+  ['www.openagentwatch.space', { project: 'openagentwatch' }],
+  ['playwrightselectorguard.clauxel.com', { project: 'playwrightselectorguard' }],
+  ['policyproofdesk.space', { project: 'policyproofdesk' }],
+  ['www.policyproofdesk.space', { project: 'policyproofdesk' }],
+  ['promptfixreceipt.space', { project: 'promptfixreceipt' }],
+  ['www.promptfixreceipt.space', { project: 'promptfixreceipt' }],
+  ['safetyreplay.clauxel.com', { project: 'safety-replay-gate' }],
+  ['schemadriftgate.clauxel.com', { project: 'schema-drift-gate' }],
+  ['searchpricewatch.space', { project: 'searchpricewatch' }],
+  ['www.searchpricewatch.space', { project: 'searchpricewatch' }],
+  ['shopanswertrace.space', { project: 'shopanswertrace' }],
+  ['www.shopanswertrace.space', { project: 'shopanswertrace' }],
+  ['toolcallwitness.clauxel.com', { project: 'toolcallwitness' }],
+  ['tracepiishield.clauxel.com', { project: 'tracepiishield' }],
+  ['universalcartmerchantgate.clauxel.com', { project: 'universalcartmerchantgate' }],
+  ['veoscenecontinuity.space', { project: 'veoscenecontinuity' }],
+  ['www.veoscenecontinuity.space', { project: 'veoscenecontinuity' }],
+  ['videoclaimsqa.space', { project: 'videoclaimsqa' }],
+  ['www.videoclaimsqa.space', { project: 'videoclaimsqa' }],
+])
+// </trendradar-diversified-site-map-2026-05-26>
 
 const creemProductCache = new Map()
 
@@ -390,6 +500,42 @@ function handleOptions(request) {
   return new Response(null, { status: 204, headers: securityHeaders(request) })
 }
 
+async function handleStaticRoundSite(request, env, requestUrl) {
+  const pathname = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  if (request.method === 'OPTIONS' && pathname.startsWith('/api/')) return handleOptions(request)
+  if (pathname === '/api/runtime') return handleRuntime(request, requestUrl)
+  if (pathname === '/api/checkout') return handleCheckout(request, env, requestUrl)
+  if (pathname === '/api/nowpayments-checkout') {
+    return handleNowPaymentsCheckout(request, env, {
+      plans: planCatalog,
+      defaultPlanId: 'pro',
+      siteName: requestUrl.hostname,
+      siteKey: requestUrl.hostname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'external-site',
+      annualDiscountMultiplier: typeof ANNUAL_DISCOUNT_MULTIPLIER !== 'undefined'
+        ? ANNUAL_DISCOUNT_MULTIPLIER
+        : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
+    })
+  }
+
+  if (!env?.ASSETS?.fetch) {
+    return new Response('Static assets are not bound for this deployment.', {
+      status: 503,
+      headers: securityHeaders(request),
+    })
+  }
+
+  if (pathname !== '/' && !/\.[a-z0-9]+$/i.test(pathname)) {
+    const assetUrl = new URL(request.url)
+    assetUrl.pathname = `${pathname}/index.html`
+    const assetResponse = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
+    if (assetResponse.status !== 404) return assetResponse
+  }
+
+  const assetUrl = new URL(request.url)
+  if (pathname === '/') assetUrl.pathname = '/index.html'
+  return env.ASSETS.fetch(new Request(assetUrl.toString(), request))
+}
+
 function maybeRedirectToHttps(requestUrl) {
   if (requestUrl.hostname === LIVE_HOST || ALT_HOSTS.has(requestUrl.hostname)) {
     if (requestUrl.protocol !== 'https:' || requestUrl.hostname !== LIVE_HOST) {
@@ -411,7 +557,7 @@ function resolvePublicAppOrigin(requestUrl) {
     return requestUrl.origin
   }
 
-  return LIVE_ORIGIN
+  return requestUrl.origin
 }
 
 function resolveCreemBase(env) {
@@ -545,9 +691,21 @@ async function handleCheckout(request, env, requestUrl) {
     return jsonResponse({ ok: false, error: 'Method not allowed.' }, 405, request)
   }
 
+  const nowPaymentsFallbackRequest = request.clone()
+  const nowPaymentsFallback = () =>
+    handleNowPaymentsCheckout(nowPaymentsFallbackRequest, env, {
+      plans: planCatalog,
+      defaultPlanId: 'pro',
+      siteName: requestUrl.hostname,
+      siteKey: requestUrl.hostname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'external-site',
+      annualDiscountMultiplier: typeof ANNUAL_DISCOUNT_MULTIPLIER !== 'undefined'
+        ? ANNUAL_DISCOUNT_MULTIPLIER
+        : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
+    })
+
   const apiKey = await firstSecretEnv(env, 'API_PROD_KEY', 'CREEM_API_KEY', 'CREEM_KEY')
   if (!apiKey) {
-    return jsonResponse({ ok: false, error: 'Payment is not configured yet.' }, 503, request)
+    return nowPaymentsFallback()
   }
 
   let body
@@ -570,7 +728,7 @@ async function handleCheckout(request, env, requestUrl) {
       success_url: successUrl,
       request_id: `nine_router_${Date.now()}_${Math.random().toString(16).slice(2)}`,
       metadata: {
-        site: '9router.space',
+        site: requestUrl.hostname,
         planId: plan.id,
         billing,
       },
@@ -579,7 +737,7 @@ async function handleCheckout(request, env, requestUrl) {
     if (!checkoutUrl) throw new Error('Creem did not return a checkout URL.')
     return jsonResponse({ ok: true, checkoutUrl }, 200, request)
   } catch {
-    return jsonResponse({ ok: false, error: 'Secure checkout could not be created yet.' }, 502, request)
+    return nowPaymentsFallback()
   }
 }
 
@@ -683,6 +841,18 @@ export async function handleRequest(request, env) {
     return handleSaasManagementPlatform(request, env, requestUrl)
   }
 
+  const vercelSite = vercelSites.get(requestUrl.hostname)
+  if (vercelSite) {
+    return handleStaticRoundSite(request, roundSiteEnv(env, '_vercel', vercelSite.project), requestUrl)
+  }
+
+  const round17 = round17Sites.get(requestUrl.hostname)
+  if (round17) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_round17', round17.project)
+    if (proofResponse) return proofResponse
+    return round17.handler(request, roundSiteEnv(env, '_round17', round17.project), requestUrl)
+  }
+
   const round18 = round18Sites.get(requestUrl.hostname)
   if (round18) {
     const proofResponse = await handleRound18Proof(request, env, round18.project)
@@ -729,6 +899,15 @@ export async function handleRequest(request, env) {
     if (proofResponse) return proofResponse
     return round26.handler(request, roundSiteEnv(env, '_round26', round26.project), requestUrl)
   }
+
+  // <trendradar-diversified-site-handler-2026-05-26>
+  const diversifiedSite = diversifiedStaticSites.get(requestUrl.hostname)
+  if (diversifiedSite) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_diversified', diversifiedSite.project)
+    if (proofResponse) return proofResponse
+    return handleStaticRoundSite(request, roundSiteEnv(env, '_diversified', diversifiedSite.project), requestUrl)
+  }
+  // </trendradar-diversified-site-handler-2026-05-26>
 
   if (request.method === 'OPTIONS') return handleOptions(request)
   if (requestUrl.pathname === '/api/nowpayments-checkout') {
