@@ -52,6 +52,8 @@ import { handleRequest as handleRound25Futureagievals } from './round25/futureag
 import { handleRequest as handleRound25Evalscopebench } from './round25/evalscopebench/index.js'
 import { handleRequest as handleRound25Autobrowserapproval } from './round25/autobrowserapproval/index.js'
 import { handleRequest as handleRound25Mcpgatewaydesk } from './round25/mcpgatewaydesk/index.js'
+import { handleRequest as handleRound26Context7docs } from './round26/context7docs/index.js'
+import { handleRequest as handleRound26Nangointegrationops } from './round26/nangointegrationops/index.js'
 import { handleRequest as handleSaasManagementPlatform } from './management/saas-management-platform.js'
 
 const LIVE_ORIGIN = 'https://9router.space'
@@ -137,6 +139,12 @@ const round25Sites = new Map([
   ['evalscopebench.clauxel.com', { project: 'evalscopebench', handler: handleRound25Evalscopebench }],
   ['autobrowserapproval.clauxel.com', { project: 'autobrowserapproval', handler: handleRound25Autobrowserapproval }],
   ['mcpgatewaydesk.clauxel.com', { project: 'mcpgatewaydesk', handler: handleRound25Mcpgatewaydesk }],
+])
+
+const round26Sites = new Map([
+  ['context7docs.clauxel.com', { project: 'context7docs', handler: handleRound26Context7docs }],
+  ['nangointegrationops.space', { project: 'nangointegrationops', handler: handleRound26Nangointegrationops }],
+  ['www.nangointegrationops.space', { project: 'nangointegrationops', handler: handleRound26Nangointegrationops }],
 ])
 
 const creemProductCache = new Map()
@@ -706,6 +714,20 @@ export async function handleRequest(request, env) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round25', round25.project)
     if (proofResponse) return proofResponse
     return round25.handler(request, roundSiteEnv(env, '_round25', round25.project), requestUrl)
+  }
+
+  if (requestUrl.hostname === 'www.nangointegrationops.space') {
+    const redirectUrl = new URL(requestUrl)
+    redirectUrl.protocol = 'https:'
+    redirectUrl.hostname = 'nangointegrationops.space'
+    return Response.redirect(redirectUrl.toString(), 301)
+  }
+
+  const round26 = round26Sites.get(requestUrl.hostname)
+  if (round26) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_round26', round26.project)
+    if (proofResponse) return proofResponse
+    return round26.handler(request, roundSiteEnv(env, '_round26', round26.project), requestUrl)
   }
 
   if (request.method === 'OPTIONS') return handleOptions(request)

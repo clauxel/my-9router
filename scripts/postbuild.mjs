@@ -533,6 +533,15 @@ async function syncRoundSites() {
     await copyPublicSiteFrom(path.join(workspaceRoot, project), path.join(distDir, '_round25', project))
   }
 
+  const round26StaticProjects = [
+    'context7docs',
+    'nangointegrationops',
+  ]
+
+  for (const project of round26StaticProjects) {
+    await copyPublicSiteFrom(path.join(workspaceRoot, project), path.join(distDir, '_round26', project))
+  }
+
   await copyPublicSiteFrom(path.join(workspaceRoot, 'Odoo', 'out'), path.join(distDir, '_round24', 'easyodoo'))
   await copyPublicSiteFrom(
     path.join(workspaceRoot, 'saas-management-platform', 'public'),

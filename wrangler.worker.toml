@@ -51,6 +51,9 @@ routes = [
   { pattern = "inkeepagents.space/*", zone_name = "inkeepagents.space" },
   { pattern = "www.inkeepagents.space/*", zone_name = "inkeepagents.space" },
   { pattern = "headroomcompress.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "context7docs.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "nangointegrationops.space/*", zone_name = "nangointegrationops.space" },
+  { pattern = "www.nangointegrationops.space/*", zone_name = "nangointegrationops.space" },
   { pattern = "easy-odoo.space/*", zone_name = "easy-odoo.space" },
   { pattern = "www.easy-odoo.space/*", zone_name = "easy-odoo.space" }
 ]
