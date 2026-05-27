@@ -223,6 +223,8 @@ const diversifiedStaticSites = new Map([
   ['a2adependencyinspector.clauxel.com', { project: 'a2adependencyinspector' }],
   ['a2aidentitytoll.clauxel.com', { project: 'a2aidentitytoll' }],
   ['a2areplayreceipt.clauxel.com', { project: 'a2areplayreceipt' }],
+  ['activepiecesworkflow.space', { project: 'activepiecesworkflow' }],
+  ['www.activepiecesworkflow.space', { project: 'activepiecesworkflow' }],
   ['agenthandoffsla.space', { project: 'agent-handoff-sla-board' }],
   ['www.agenthandoffsla.space', { project: 'agent-handoff-sla-board' }],
   ['agentdataboundary.clauxel.com', { project: 'agentdataboundary' }],
@@ -232,6 +234,8 @@ const diversifiedStaticSites = new Map([
   ['www.agentrollbackplan.space', { project: 'agentic-rollback-planbook' }],
   ['agenticbudgetrouter.clauxel.com', { project: 'agenticbudgetrouter' }],
   ['agentichtmlexportqa.clauxel.com', { project: 'agentichtmlexportqa' }],
+  ['agenticinboxdesk.space', { project: 'agenticinboxdesk' }],
+  ['www.agenticinboxdesk.space', { project: 'agenticinboxdesk' }],
   ['agentmailrooms.clauxel.com', { project: 'agentmailrooms' }],
   ['agentmemorymcp.clauxel.com', { project: 'agentmemorymcp' }],
   ['agentmonitorrelay.clauxel.com', { project: 'agentmonitorrelay' }],
@@ -246,6 +250,8 @@ const diversifiedStaticSites = new Map([
   ['aiactdisclosuredesk.space', { project: 'aiactdisclosuredesk' }],
   ['www.aiactdisclosuredesk.space', { project: 'aiactdisclosuredesk' }],
   ['aidevkitworkflow.clauxel.com', { project: 'aidevkitworkflow' }],
+  ['aionuicowork.space', { project: 'aionuicowork' }],
+  ['www.aionuicowork.space', { project: 'aionuicowork' }],
   ['aireviewsignal.space', { project: 'aireviewsignal' }],
   ['www.aireviewsignal.space', { project: 'aireviewsignal' }],
   ['aistudioandroidreleasegate.clauxel.com', { project: 'aistudioandroidreleasegate' }],
@@ -255,6 +261,8 @@ const diversifiedStaticSites = new Map([
   ['antigravityextensiongate.clauxel.com', { project: 'antigravityextensiongate' }],
   ['antigravityrunledger.clauxel.com', { project: 'antigravityrunledger' }],
   ['arkonknowledge.clauxel.com', { project: 'arkonknowledge' }],
+  ['askimodesk.space', { project: 'askimodesk' }],
+  ['www.askimodesk.space', { project: 'askimodesk' }],
   ['autobrowserapproval.clauxel.com', { project: 'autobrowserapproval' }],
   ['axonhubgateway.space', { project: 'axonhubgateway' }],
   ['www.axonhubgateway.space', { project: 'axonhubgateway' }],
@@ -269,12 +277,16 @@ const diversifiedStaticSites = new Map([
   ['chromedevtoolsmcp.clauxel.com', { project: 'chromedevtoolsmcp' }],
   ['claudecodereplacement.space', { project: 'claudecodereplacement' }],
   ['www.claudecodereplacement.space', { project: 'claudecodereplacement' }],
+  ['clawmanagerfleet.clauxel.com', { project: 'clawmanagerfleet' }],
   ['clianythingharness.clauxel.com', { project: 'clianythingharness' }],
   ['codegraphcontext.clauxel.com', { project: 'codegraphcontext' }],
+  ['codegworkspace.clauxel.com', { project: 'codegworkspace' }],
   ['codexdeployreadiness.space', { project: 'codex-deploy-readiness' }],
   ['www.codexdeployreadiness.space', { project: 'codex-deploy-readiness' }],
   ['codexrunledger.clauxel.com', { project: 'codexrunledger' }],
   ['context7docs.clauxel.com', { project: 'context7docs' }],
+  ['coolifylaunch.space', { project: 'coolifylaunch' }],
+  ['www.coolifylaunch.space', { project: 'coolifylaunch' }],
   ['copilotcliswitchgate.clauxel.com', { project: 'copilotcliswitchgate' }],
   ['copilotconnectorledger.clauxel.com', { project: 'copilotconnectorledger' }],
   ['coralquery.clauxel.com', { project: 'coralquery' }],
@@ -282,8 +294,14 @@ const diversifiedStaticSites = new Map([
   ['www.cozeloopops.space', { project: 'cozeloopops' }],
   ['cursorcostlab.space', { project: 'cursor-composer-cost-lab' }],
   ['www.cursorcostlab.space', { project: 'cursor-composer-cost-lab' }],
+  ['decapodkernel.clauxel.com', { project: 'decapodkernel' }],
   ['devinsessionboard.space', { project: 'devinsessionboard' }],
   ['www.devinsessionboard.space', { project: 'devinsessionboard' }],
+  ['dograhvoice.space', { project: 'dograhvoice' }],
+  ['www.dograhvoice.space', { project: 'dograhvoice' }],
+  ['dyadteambuilder.space', { project: 'dyadteambuilder' }],
+  ['www.dyadteambuilder.space', { project: 'dyadteambuilder' }],
+  ['equiblesagent.clauxel.com', { project: 'equiblesagent' }],
   ['evalscopebench.clauxel.com', { project: 'evalscopebench' }],
   ['fastmcpruntime.clauxel.com', { project: 'fastmcpruntime' }],
   ['futureagievals.clauxel.com', { project: 'futureagievals' }],
@@ -302,11 +320,17 @@ const diversifiedStaticSites = new Map([
   ['www.gomodelgateway.space', { project: 'gomodelgateway' }],
   ['headroomcompress.clauxel.com', { project: 'headroomcompress' }],
   ['hermesagentrun.clauxel.com', { project: 'hermesagentrun' }],
+  ['holaosworkstream.space', { project: 'holaosworkstream' }],
+  ['www.holaosworkstream.space', { project: 'holaosworkstream' }],
+  ['hyperframesrender.clauxel.com', { project: 'hyperframesrender' }],
   ['inkeepagents.space', { project: 'inkeepagents' }],
   ['www.inkeepagents.space', { project: 'inkeepagents' }],
+  ['intentkitcluster.space', { project: 'intentkitcluster' }],
+  ['www.intentkitcluster.space', { project: 'intentkitcluster' }],
   ['jcodeharness.clauxel.com', { project: 'jcodeharness' }],
   ['kirowebreleasebinder.clauxel.com', { project: 'kirowebreleasebinder' }],
   ['kreuzbergextract.clauxel.com', { project: 'kreuzbergextract' }],
+  ['lixversion.clauxel.com', { project: 'lixversion' }],
   ['mastraworkflow.space', { project: 'mastraworkflow' }],
   ['www.mastraworkflow.space', { project: 'mastraworkflow' }],
   ['mcpdirectoryradar.space', { project: 'mcp-directory-radar' }],
@@ -331,10 +355,13 @@ const diversifiedStaticSites = new Map([
   ['opendesignguard.clauxel.com', { project: 'opendesignguard' }],
   ['openlitops.space', { project: 'openlitops' }],
   ['www.openlitops.space', { project: 'openlitops' }],
+  ['paperclipcompany.space', { project: 'paperclipcompany' }],
+  ['www.paperclipcompany.space', { project: 'paperclipcompany' }],
   ['playwrightselectorguard.clauxel.com', { project: 'playwrightselectorguard' }],
   ['playwritermcp.clauxel.com', { project: 'playwritermcp' }],
   ['policyproofdesk.space', { project: 'policyproofdesk' }],
   ['www.policyproofdesk.space', { project: 'policyproofdesk' }],
+  ['pptmasterdeck.clauxel.com', { project: 'pptmasterdeck' }],
   ['promptfixreceipt.space', { project: 'promptfixreceipt' }],
   ['www.promptfixreceipt.space', { project: 'promptfixreceipt' }],
   ['protocolanalyzerai.clauxel.com', { project: 'protocolanalyzerai' }],
@@ -346,22 +373,41 @@ const diversifiedStaticSites = new Map([
   ['searchpricewatch.space', { project: 'searchpricewatch' }],
   ['www.searchpricewatch.space', { project: 'searchpricewatch' }],
   ['semblecodesearchgate.clauxel.com', { project: 'semblecodesearchgate' }],
+  ['shipswiftcomponents.clauxel.com', { project: 'shipswiftcomponents' }],
   ['shopanswertrace.space', { project: 'shopanswertrace' }],
   ['www.shopanswertrace.space', { project: 'shopanswertrace' }],
+  ['simstudiohost.space', { project: 'simstudiohost' }],
+  ['www.simstudiohost.space', { project: 'simstudiohost' }],
+  ['skillshubsync.space', { project: 'skillshubsync' }],
+  ['www.skillshubsync.space', { project: 'skillshubsync' }],
+  ['skybridgepackager.clauxel.com', { project: 'skybridgepackager' }],
   ['solaceagentmesh.space', { project: 'solaceagentmesh' }],
   ['www.solaceagentmesh.space', { project: 'solaceagentmesh' }],
   ['speckitacceptance.clauxel.com', { project: 'speckitacceptance' }],
+  ['sregymgate.clauxel.com', { project: 'sregymgate' }],
+  ['statewrightgate.clauxel.com', { project: 'statewrightgate' }],
   ['taskorchestratorgate.clauxel.com', { project: 'taskorchestratorgate' }],
   ['toolcallwitness.clauxel.com', { project: 'toolcallwitness' }],
   ['tracepiishield.clauxel.com', { project: 'tracepiishield' }],
+  ['twentyrevenue.space', { project: 'twentyrevenue' }],
+  ['www.twentyrevenue.space', { project: 'twentyrevenue' }],
+  ['unitymcptest.clauxel.com', { project: 'unitymcptest' }],
   ['universalcartmerchantgate.clauxel.com', { project: 'universalcartmerchantgate' }],
   ['veocreditwaste.clauxel.com', { project: 'veocreditwaste' }],
   ['veoscenecontinuity.space', { project: 'veoscenecontinuity' }],
   ['www.veoscenecontinuity.space', { project: 'veoscenecontinuity' }],
   ['videoclaimsqa.space', { project: 'videoclaimsqa' }],
   ['www.videoclaimsqa.space', { project: 'videoclaimsqa' }],
+  ['vm0workqueue.space', { project: 'vm0workqueue' }],
+  ['www.vm0workqueue.space', { project: 'vm0workqueue' }],
+  ['voltagentconsole.space', { project: 'voltagentconsole' }],
+  ['www.voltagentconsole.space', { project: 'voltagentconsole' }],
   ['webclawextract.clauxel.com', { project: 'webclawextract' }],
   ['webmcpactionreceipt.clauxel.com', { project: 'webmcpactionreceipt' }],
+  ['yaolaunchroom.space', { project: 'yaolaunchroom' }],
+  ['www.yaolaunchroom.space', { project: 'yaolaunchroom' }],
+  ['zeroidagent.clauxel.com', { project: 'zeroidagent' }],
+  ['zerolangcompiler.clauxel.com', { project: 'zerolangcompiler' }],
   ['vibe-coding.best', { project: 'vibe-coding/dist' }],
   ['www.vibe-coding.best', { project: 'vibe-coding/dist' }],
 ])
@@ -930,8 +976,14 @@ async function fetchAsset(request, env) {
     if (!staticAssetPaths.has(normalizedPath) && !/\.[a-z0-9]+$/i.test(normalizedPath)) return noIndexNotFoundResponse(request)
 
     if (staticAssetPaths.has(normalizedPath)) {
+      if (normalizedPath !== '/' && requestUrl.pathname !== `${normalizedPath}/`) {
+        const canonicalUrl = new URL(request.url)
+        canonicalUrl.pathname = `${normalizedPath}/`
+        return Response.redirect(canonicalUrl.toString(), 308)
+      }
+
       const assetUrl = new URL(request.url)
-      assetUrl.pathname = normalizedPath === '/' ? '/' : `${normalizedPath}/index.html`
+      assetUrl.pathname = normalizedPath === '/' ? '/' : `${normalizedPath}/`
       const assetResponse = await env.SITE_ASSETS.fetch(new Request(assetUrl.toString(), request))
       if (assetResponse.status !== 404) return assetResponse
     }
@@ -953,6 +1005,11 @@ export async function handleRequest(request, env) {
 
   const vercelSite = vercelSites.get(requestUrl.hostname)
   if (vercelSite) {
+    if (requestUrl.hostname === 'www.multica.uk') {
+      requestUrl.hostname = 'multica.uk'
+      return Response.redirect(requestUrl.toString(), 308)
+    }
+
     return handleStaticRoundSite(request, roundSiteEnv(env, '_vercel', vercelSite.project), requestUrl)
   }
 
