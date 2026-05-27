@@ -73,6 +73,21 @@ import { handleRequest as handleRound26Coolifylaunch } from './round26/coolifyla
 import { handleRequest as handleRound26Holaosworkstream } from './round26/holaosworkstream/index.js'
 import { handleRequest as handleRound26Shipswiftcomponents } from './round26/shipswiftcomponents/index.js'
 import { handleRequest as handleRound26Intentkitcluster } from './round26/intentkitcluster/index.js'
+import { handleRequest as handleRound27Equiblesagent } from './round27/equiblesagent/index.js'
+import { handleRequest as handleRound27Sregymgate } from './round27/sregymgate/index.js'
+import { handleRequest as handleRound27Zeroidagent } from './round27/zeroidagent/index.js'
+import { handleRequest as handleRound27Lixversion } from './round27/lixversion/index.js'
+import { handleRequest as handleRound27Aionuicowork } from './round27/aionuicowork/index.js'
+import { handleRequest as handleRound27Clawmanagerfleet } from './round27/clawmanagerfleet/index.js'
+import { handleRequest as handleRound27Askimodesk } from './round27/askimodesk/index.js'
+import { handleRequest as handleRound27Statewrightgate } from './round27/statewrightgate/index.js'
+import { handleRequest as handleRound27Skillshubsync } from './round27/skillshubsync/index.js'
+import { handleRequest as handleRound27Yaolaunchroom } from './round27/yaolaunchroom/index.js'
+import { handleRequest as handleRound27Unitymcptest } from './round27/unitymcptest/index.js'
+import { handleRequest as handleRound27Codegworkspace } from './round27/codegworkspace/index.js'
+import { handleRequest as handleRound27Vm0workqueue } from './round27/vm0workqueue/index.js'
+import { handleRequest as handleRound27Simstudiohost } from './round27/simstudiohost/index.js'
+import { handleRequest as handleRound27Decapodkernel } from './round27/decapodkernel/index.js'
 import { handleRequest as handleSaasManagementPlatform } from './management/saas-management-platform.js'
 
 const LIVE_ORIGIN = 'https://9router.space'
@@ -216,6 +231,30 @@ const round26Sites = new Map([
   ['shipswiftcomponents.clauxel.com', { project: 'shipswiftcomponents', handler: handleRound26Shipswiftcomponents }],
   ['intentkitcluster.space', { project: 'intentkitcluster', handler: handleRound26Intentkitcluster }],
   ['www.intentkitcluster.space', { project: 'intentkitcluster', handler: handleRound26Intentkitcluster }],
+])
+
+const round27Sites = new Map([
+  ['equiblesagent.clauxel.com', { project: 'equiblesagent', handler: handleRound27Equiblesagent }],
+  ['sregymgate.clauxel.com', { project: 'sregymgate', handler: handleRound27Sregymgate }],
+  ['zeroidagent.clauxel.com', { project: 'zeroidagent', handler: handleRound27Zeroidagent }],
+  ['lixversion.clauxel.com', { project: 'lixversion', handler: handleRound27Lixversion }],
+  ['aionuicowork.space', { project: 'aionuicowork', handler: handleRound27Aionuicowork }],
+  ['www.aionuicowork.space', { project: 'aionuicowork', handler: handleRound27Aionuicowork }],
+  ['clawmanagerfleet.clauxel.com', { project: 'clawmanagerfleet', handler: handleRound27Clawmanagerfleet }],
+  ['askimodesk.space', { project: 'askimodesk', handler: handleRound27Askimodesk }],
+  ['www.askimodesk.space', { project: 'askimodesk', handler: handleRound27Askimodesk }],
+  ['statewrightgate.clauxel.com', { project: 'statewrightgate', handler: handleRound27Statewrightgate }],
+  ['skillshubsync.space', { project: 'skillshubsync', handler: handleRound27Skillshubsync }],
+  ['www.skillshubsync.space', { project: 'skillshubsync', handler: handleRound27Skillshubsync }],
+  ['yaolaunchroom.space', { project: 'yaolaunchroom', handler: handleRound27Yaolaunchroom }],
+  ['www.yaolaunchroom.space', { project: 'yaolaunchroom', handler: handleRound27Yaolaunchroom }],
+  ['unitymcptest.clauxel.com', { project: 'unitymcptest', handler: handleRound27Unitymcptest }],
+  ['codegworkspace.clauxel.com', { project: 'codegworkspace', handler: handleRound27Codegworkspace }],
+  ['vm0workqueue.space', { project: 'vm0workqueue', handler: handleRound27Vm0workqueue }],
+  ['www.vm0workqueue.space', { project: 'vm0workqueue', handler: handleRound27Vm0workqueue }],
+  ['simstudiohost.space', { project: 'simstudiohost', handler: handleRound27Simstudiohost }],
+  ['www.simstudiohost.space', { project: 'simstudiohost', handler: handleRound27Simstudiohost }],
+  ['decapodkernel.clauxel.com', { project: 'decapodkernel', handler: handleRound27Decapodkernel }],
 ])
 
 // <trendradar-diversified-site-map-2026-05-26>
@@ -1011,6 +1050,13 @@ export async function handleRequest(request, env) {
     }
 
     return handleStaticRoundSite(request, roundSiteEnv(env, '_vercel', vercelSite.project), requestUrl)
+  }
+
+  const round27 = round27Sites.get(requestUrl.hostname)
+  if (round27) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_diversified', round27.project)
+    if (proofResponse) return proofResponse
+    return round27.handler(request, roundSiteEnv(env, '_diversified', round27.project), requestUrl)
   }
 
   // <trendradar-diversified-site-handler-2026-05-26>
