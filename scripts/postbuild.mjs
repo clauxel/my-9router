@@ -699,6 +699,7 @@ async function syncRoundSites() {
     { project: 'codexrunledger', sourceDir: path.join(workspaceRoot, 'codexrunledger') },
     { project: 'context7docs', sourceDir: path.join(workspaceRoot, 'context7docs') },
     { project: 'coolifylaunch', sourceDir: path.join(workspaceRoot, 'coolifylaunch') },
+    { project: 'cookiefreeanalytics', sourceDir: path.join(workspaceRoot, 'cookiefreeanalytics') },
     { project: 'copilotcliswitchgate', sourceDir: path.join(workspaceRoot, 'copilotcliswitchgate') },
     { project: 'copilotconnectorledger', sourceDir: path.join(workspaceRoot, 'copilotconnectorledger') },
     { project: 'coralquery', sourceDir: path.join(workspaceRoot, 'coralquery') },
@@ -830,6 +831,10 @@ async function syncRoundSites() {
       'node_modules',
       'package.json',
       'package-lock.json',
+      'README.md',
+      'scripts',
+      'test-results',
+      'WEBSITE_CHANGELOG.md',
       'wrangler.toml',
       'wrangler.worker.toml',
     ].includes(name) || /^analytics-last-1d-/.test(name)

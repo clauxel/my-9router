@@ -332,6 +332,77 @@ const saasManagerPaymentConfig = {
   facts: ['Built for portfolio operators', 'Connects reports, ledgers, launch checks, and payment readiness', 'Hosted checkout and support path are visible before purchase'],
 }
 
+const cookieFreeAnalyticsHosts = new Set(['cookiefreeanalytics.space', 'www.cookiefreeanalytics.space'])
+
+const cookieFreeAnalyticsPlans = {
+  starter: {
+    id: 'starter',
+    name: 'Starter',
+    monthlyAmountCents: 900,
+    currency: 'USD',
+    summary: 'paid cookie-free analytics audit for one site',
+  },
+  growth: {
+    id: 'growth',
+    name: 'Growth',
+    monthlyAmountCents: 2900,
+    currency: 'USD',
+    summary: 'paid privacy-first analytics dashboard and launch report',
+    featured: true,
+  },
+  agency: {
+    id: 'agency',
+    name: 'Agency',
+    monthlyAmountCents: 7900,
+    currency: 'USD',
+    summary: 'paid cookie-free analytics reporting for client portfolios',
+  },
+}
+
+function cookieFreeAnalyticsOrigin(requestUrl) {
+  return `https://${requestUrl.hostname.replace(/^www\./, '')}`
+}
+
+async function maybeHandleCookieFreeAnalyticsApi(request, env, requestUrl) {
+  if (!cookieFreeAnalyticsHosts.has(requestUrl.hostname)) return null
+
+  const pathname = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  if (request.method === 'OPTIONS' && pathname.startsWith('/api/')) return handleOptions(request)
+
+  if (pathname === '/api/runtime') {
+    const apiKey = await firstSecretEnv(env, 'NOWPAYMENTS_API_KEY', 'NOWPAYMENTS_KEY')
+    return jsonResponse({
+      ok: true,
+      siteKey: 'cookiefreeanalytics',
+      product: 'CookieFree Analytics',
+      publicAppOrigin: cookieFreeAnalyticsOrigin(requestUrl),
+      deployment: 'cloudflare-workers-assets',
+      paymentProvider: 'nowpayments',
+      nowpaymentsConfigured: Boolean(apiKey),
+      payCurrency: String(env?.NOWPAYMENTS_PAY_CURRENCY || 'USDCMATIC').trim().toUpperCase(),
+      defaultPlan: 'growth',
+      defaultBilling: 'annual',
+      annualDiscount: '50%',
+      accessPolicy: 'payment_required_before_use',
+      ts: Date.now(),
+    }, 200, request)
+  }
+
+  if (pathname === '/api/checkout' || pathname === '/api/nowpayments-checkout') {
+    return handleNowPaymentsCheckout(request, env, {
+      plans: cookieFreeAnalyticsPlans,
+      defaultPlanId: 'growth',
+      defaultBilling: 'annual',
+      annualDiscountMultiplier: ANNUAL_DISCOUNT_MULTIPLIER,
+      siteKey: 'cookiefreeanalytics',
+      siteName: 'CookieFree Analytics',
+      resolveOrigin: () => cookieFreeAnalyticsOrigin(requestUrl),
+    })
+  }
+
+  return null
+}
+
 for (const [host, config] of [...quickLaunchSites]) {
   quickLaunchSites.set(`www.${host}`, config)
 }
@@ -405,6 +476,8 @@ const diversifiedStaticSites = new Map([
   ['context7docs.clauxel.com', { project: 'context7docs' }],
   ['coolifylaunch.space', { project: 'coolifylaunch' }],
   ['www.coolifylaunch.space', { project: 'coolifylaunch' }],
+  ['cookiefreeanalytics.space', { project: 'cookiefreeanalytics' }],
+  ['www.cookiefreeanalytics.space', { project: 'cookiefreeanalytics' }],
   ['copilotcliswitchgate.clauxel.com', { project: 'copilotcliswitchgate' }],
   ['copilotconnectorledger.clauxel.com', { project: 'copilotconnectorledger' }],
   ['coralquery.clauxel.com', { project: 'coralquery' }],
@@ -1715,6 +1788,9 @@ export async function handleRequest(request, env) {
 
   const managedCanonicalRedirect = maybeRedirectManagedCanonical(request, requestUrl)
   if (managedCanonicalRedirect) return managedCanonicalRedirect
+
+  const cookieFreeAnalyticsApiResponse = await maybeHandleCookieFreeAnalyticsApi(request, env, requestUrl)
+  if (cookieFreeAnalyticsApiResponse) return cookieFreeAnalyticsApiResponse
 
   const vercelSite = vercelSites.get(requestUrl.hostname)
   if (vercelSite) {
