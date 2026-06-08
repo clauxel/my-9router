@@ -982,6 +982,10 @@ const saasManagerAllowedExactPaths = new Set([
   '/',
   '/pricing',
   '/resources',
+  '/privacy',
+  '/terms',
+  '/checkout',
+  '/success',
   '/robots.txt',
   '/sitemap.xml',
 ])
