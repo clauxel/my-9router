@@ -184,6 +184,8 @@ routes = [
   { pattern = "agentmailrooms.clauxel.com/*", zone_name = "clauxel.com" },
   { pattern = "axonhubgateway.space/*", zone_name = "axonhubgateway.space" },
   { pattern = "www.axonhubgateway.space/*", zone_name = "axonhubgateway.space" },
+  { pattern = "jcodeharness.space/*", zone_name = "jcodeharness.space" },
+  { pattern = "www.jcodeharness.space/*", zone_name = "jcodeharness.space" },
   { pattern = "bumblebeereceipt.clauxel.com/*", zone_name = "clauxel.com" },
   { pattern = "chromedevtoolsmcp.clauxel.com/*", zone_name = "clauxel.com" },
   { pattern = "futureagievals.clauxel.com/*", zone_name = "clauxel.com" },
