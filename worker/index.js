@@ -904,6 +904,28 @@ function managedSiteKeyFromHost(hostname) {
   return hostname.replace(/^www\./, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'managed-site'
 }
 
+const saasManagerAllowedExactPaths = new Set([
+  '/',
+  '/pricing',
+  '/resources',
+  '/robots.txt',
+  '/sitemap.xml',
+])
+
+const saasManagerAllowedPrefixes = [
+  '/tools/',
+  '/推广/',
+  '/热词/',
+]
+
+function isKnownSaasManagerPublicPath(pathname) {
+  const normalized = pathname.replace(/\/+$/, '') || '/'
+  if (saasManagerAllowedExactPaths.has(normalized)) return true
+  if (saasManagerAllowedPrefixes.some((prefix) => normalized.startsWith(prefix))) return true
+  if (/\.[a-z0-9]+$/i.test(normalized)) return true
+  return false
+}
+
 function handleManagedNowPaymentsCheckout(request, env, requestUrl) {
   return handleNowPaymentsCheckout(request, env, {
     plans: planCatalog,
@@ -1330,6 +1352,9 @@ async function fetchAsset(request, env) {
 export async function handleRequest(request, env) {
   const requestUrl = new URL(request.url)
   if (requestUrl.hostname === 'saas-manager.clauxel.com') {
+    if ((request.method === 'GET' || request.method === 'HEAD') && !isKnownSaasManagerPublicPath(requestUrl.pathname)) {
+      return noIndexNotFoundResponse(request)
+    }
     return handleSaasManagementPlatform(request, env, requestUrl)
   }
 
