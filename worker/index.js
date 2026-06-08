@@ -759,7 +759,7 @@ async function handleStaticRoundSite(request, env, requestUrl) {
     const assetUrl = new URL(request.url)
     assetUrl.pathname = `${pathname}/index.html`
     const assetResponse = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
-    if (assetResponse.status !== 404) return withManagedStaticHtmlMetadata(assetResponse, requestUrl)
+    if (await isManagedStaticPageAssetResponse(assetResponse)) return withManagedStaticHtmlMetadata(assetResponse, requestUrl)
     return noIndexNotFoundResponse(request)
   }
 
@@ -817,6 +817,7 @@ const managedMarketingAllowedExactPaths = new Set([
   '/checkout/done',
   '/checkout',
   '/checkout/success',
+  '/mcp',
   '/docs',
   '/guides',
   '/plans',
@@ -839,6 +840,19 @@ const managedMarketingAllowedPrefixes = [
   '/use-cases/',
 ]
 
+function looksLikeManagedAssetFallback(body) {
+  return /<title>\s*9router Space - AI Router Control Plane/i.test(body) ||
+    (/<div\s+id=["']root["']\s*>\s*<\/div>/i.test(body) && /9router|AI Router Control Plane/i.test(body))
+}
+
+async function isManagedStaticPageAssetResponse(response) {
+  if (!response || response.status === 404 || response.status >= 400) return false
+  const contentType = response.headers.get('Content-Type') || ''
+  if (!contentType.toLowerCase().includes('text/html')) return true
+  const body = await response.clone().text()
+  return !looksLikeManagedAssetFallback(body)
+}
+
 async function hasManagedStaticPageAsset(request, env, normalizedPath) {
   if (!env?.ASSETS?.fetch) return false
   if (normalizedPath === '/' || /\.[a-z0-9]+$/i.test(normalizedPath)) return false
@@ -846,7 +860,7 @@ async function hasManagedStaticPageAsset(request, env, normalizedPath) {
   const assetUrl = new URL(request.url)
   assetUrl.pathname = `${normalizedPath}/index.html`
   const assetResponse = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
-  return assetResponse.status !== 404
+  return isManagedStaticPageAssetResponse(assetResponse)
 }
 
 async function maybeReturnManagedMarketingNotFound(request, env, requestUrl) {
