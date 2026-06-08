@@ -213,6 +213,14 @@ routes = [
   { pattern = "yaolaunchroom.space/*", zone_name = "yaolaunchroom.space" },
   { pattern = "www.yaolaunchroom.space/*", zone_name = "yaolaunchroom.space" },
   { pattern = "zeroidagent.clauxel.com/*", zone_name = "clauxel.com" },
+  { pattern = "llminvoiceguard.space/*", zone_name = "llminvoiceguard.space" },
+  { pattern = "www.llminvoiceguard.space/*", zone_name = "llminvoiceguard.space" },
+  { pattern = "manusworkspacelog.space/*", zone_name = "manusworkspacelog.space" },
+  { pattern = "www.manusworkspacelog.space/*", zone_name = "manusworkspacelog.space" },
+  { pattern = "paperclipops.space/*", zone_name = "paperclipops.space" },
+  { pattern = "www.paperclipops.space/*", zone_name = "paperclipops.space" },
+  { pattern = "skillsmarketwatch.space/*", zone_name = "skillsmarketwatch.space" },
+  { pattern = "www.skillsmarketwatch.space/*", zone_name = "skillsmarketwatch.space" },
 ]
 
 [vars]

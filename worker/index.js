@@ -262,6 +262,57 @@ const round27Sites = new Map([
   ['decapodkernel.clauxel.com', { project: 'decapodkernel', handler: handleRound27Decapodkernel }],
 ])
 
+const quickLaunchSites = new Map([
+  ['llminvoiceguard.space', {
+    name: 'LLM Invoice Guard',
+    product: 'invoice review workspace',
+    h1: 'Review LLM vendor invoices before spend leaks into finance.',
+    description: 'LLM Invoice Guard helps teams check AI vendor invoices, token usage, overage notes, refunds, and approval evidence before a payment is released.',
+    defaultPlan: 'team',
+    primaryAction: 'Checkout Team annual',
+    monthly: [19, 49, 99],
+    useCases: ['Vendor invoice triage', 'Token and usage evidence review', 'Finance approval receipts'],
+    facts: ['Built for finance and AI operations teams', 'Designed around invoice, usage, approval, and refund evidence', 'Hosted checkout and support path are visible before purchase'],
+  }],
+  ['manusworkspacelog.space', {
+    name: 'Manus Workspace Log',
+    product: 'agent workspace history ledger',
+    h1: 'Keep agent workspace activity understandable before the next handoff.',
+    description: 'Manus Workspace Log gives teams a structured place to summarize agent sessions, workspace changes, handoff notes, risks, and next actions.',
+    defaultPlan: 'team',
+    primaryAction: 'Checkout Team annual',
+    monthly: [19, 59, 129],
+    useCases: ['Agent session handoff', 'Workspace change receipts', 'Operations review logs'],
+    facts: ['Built for agent operators and review teams', 'Captures decisions, blockers, artifacts, and follow-up ownership', 'Useful when multiple AI work sessions touch the same workspace'],
+  }],
+  ['paperclipops.space', {
+    name: 'Paperclip Ops',
+    product: 'document operations review desk',
+    h1: 'Turn document handoffs into a clear operations checklist.',
+    description: 'Paperclip Ops helps teams review document intake, approvals, attachments, missing fields, customer follow-up, and operational evidence before work moves forward.',
+    defaultPlan: 'team',
+    primaryAction: 'Checkout Team annual',
+    monthly: [29, 79, 199],
+    useCases: ['Document intake QA', 'Attachment and approval tracking', 'Customer operations receipts'],
+    facts: ['Built for operations teams that handle recurring document workflows', 'Focuses on missing evidence, handoff state, and next-step clarity', 'Pricing and support are visible before checkout'],
+  }],
+  ['skillsmarketwatch.space', {
+    name: 'Skills Market Watch',
+    product: 'skills market signal desk',
+    h1: 'Track skill demand signals before hiring or training decisions drift.',
+    description: 'Skills Market Watch helps teams monitor role requirements, skill shifts, evidence snapshots, training priorities, and market-change receipts.',
+    defaultPlan: 'team',
+    primaryAction: 'Checkout Team annual',
+    monthly: [19, 69, 149],
+    useCases: ['Skill demand monitoring', 'Training priority review', 'Hiring evidence receipts'],
+    facts: ['Built for operators comparing skill changes across teams and markets', 'Turns market observations into reviewable evidence', 'Connects research, pricing, and checkout in one flow'],
+  }],
+])
+
+for (const [host, config] of [...quickLaunchSites]) {
+  quickLaunchSites.set(`www.${host}`, config)
+}
+
 // <trendradar-diversified-site-map-2026-05-26>
 const diversifiedStaticSites = new Map([
   ['a2adependencyinspector.clauxel.com', { project: 'a2adependencyinspector' }],
@@ -1225,6 +1276,277 @@ function managedCanonicalOrigin(requestUrl) {
   return `https://${requestUrl.hostname.replace(/^www\./, '')}`
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
+function quickLaunchOrigin(requestUrl) {
+  return `https://${requestUrl.hostname.replace(/^www\./, '')}`
+}
+
+function quickLaunchSiteKey(requestUrl) {
+  return requestUrl.hostname.replace(/^www\./, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase()
+}
+
+function quickLaunchPlans(config) {
+  const [starter, team, scale] = config.monthly
+  return {
+    starter: {
+      id: 'starter',
+      name: 'Starter',
+      monthlyAmountCents: starter * 100,
+      currency: 'USD',
+      summary: `Starter review workflow for ${config.name}.`,
+    },
+    team: {
+      id: 'team',
+      name: 'Team',
+      monthlyAmountCents: team * 100,
+      currency: 'USD',
+      summary: `Team workspace for ${config.name}.`,
+      featured: true,
+    },
+    scale: {
+      id: 'scale',
+      name: 'Scale',
+      monthlyAmountCents: scale * 100,
+      currency: 'USD',
+      summary: `Scale operations support for ${config.name}.`,
+    },
+  }
+}
+
+function quickAnnualPrice(monthly) {
+  return Math.round(monthly * 12 * ANNUAL_DISCOUNT_MULTIPLIER)
+}
+
+function quickLaunchShell(config, requestUrl, { title, description, path = '/', body, robots = 'index,follow' }) {
+  const origin = quickLaunchOrigin(requestUrl)
+  const canonical = `${origin}${path === '/' ? '/' : path}`
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(description)}">
+<meta name="robots" content="${robots}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${escapeHtml(title)}">
+<meta property="og:description" content="${escapeHtml(description)}">
+<meta property="og:url" content="${canonical}">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: config.name,
+    applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web',
+    url: origin,
+    description,
+    offers: Object.values(quickLaunchPlans(config)).map((plan) => ({
+      '@type': 'Offer',
+      name: `${plan.name} annual`,
+      price: String(quickAnnualPrice(plan.monthlyAmountCents / 100)),
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: `${origin}/checkout/?plan=${plan.id}&billing=annual`,
+    })),
+    provider: { '@type': 'Organization', name: config.name, email: 'support@aigeamy.com' },
+  })}</script>
+<style>
+:root{color-scheme:light;--ink:#15202b;--muted:#5d6b7b;--bg:#f6f8fb;--panel:#fff;--line:#d8e0eb;--blue:#245bdb;--teal:#0f766e;--gold:#b7791f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.58}a{color:inherit}.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto}.top{background:#fff;border-bottom:1px solid var(--line)}.nav{height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:900;text-decoration:none}.navlinks{display:flex;align-items:center;gap:14px}.navlinks a{text-decoration:none;color:var(--muted);font-weight:760;font-size:14px}.button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);font:inherit;font-weight:850;text-decoration:none;cursor:pointer}.button.primary{background:var(--blue);border-color:var(--blue);color:#fff}.hero{padding:40px 0 28px}.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(330px,460px);gap:26px;align-items:start}.eyebrow{margin:0 0 8px;color:var(--teal);font-size:12px;font-weight:950;text-transform:uppercase;letter-spacing:.08em}h1{margin:0 0 14px;font-size:clamp(34px,5vw,56px);line-height:1.04;letter-spacing:0}h2{margin:0 0 10px;font-size:28px;line-height:1.15}.lead{font-size:18px;color:#334155;margin:0 0 18px}.actions{display:flex;gap:10px;flex-wrap:wrap}.panel,.card{background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 12px 28px rgba(21,32,43,.06)}.panel{padding:18px}.section{padding:32px 0;border-top:1px solid var(--line)}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{padding:18px}.card h3{margin:0 0 8px}.card p{margin:0;color:var(--muted)}.facts{display:grid;gap:10px;margin-top:12px}.facts div{border:1px solid var(--line);border-radius:8px;padding:12px;background:#fff}.price{font-size:34px;font-weight:950}.price small{font-size:14px;color:var(--muted)}.notice{padding:12px;border:1px solid #edd28b;background:#fff8e1;border-radius:8px;color:#5b4210}.footer{padding:28px 0;color:var(--muted);border-top:1px solid var(--line)}@media(max-width:850px){.hero-grid,.grid{grid-template-columns:1fr}.navlinks{display:none}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap nav"><a class="brand" href="/">${escapeHtml(config.name)}</a><nav class="navlinks"><a href="/resources/">Resources</a><a href="/pricing/">Pricing</a><a href="/privacy/">Privacy</a><button class="button primary" data-checkout data-plan-id="${config.defaultPlan}">${escapeHtml(config.primaryAction)}</button></nav></div></header>
+${body}
+<footer class="footer"><div class="wrap">${escapeHtml(config.name)} serves global teams. Support: <a href="mailto:support@aigeamy.com">support@aigeamy.com</a>. <a href="/terms/">Terms</a> and <a href="/llms.txt">llms.txt</a>.</div></footer>
+<script>
+document.querySelectorAll('[data-checkout]').forEach((button)=>button.addEventListener('click',async()=>{button.disabled=true;const label=button.textContent;button.textContent='Preparing checkout...';try{const response=await fetch('/api/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({planId:button.dataset.planId||'team',billing:'annual'})});const data=await response.json();if(data.checkoutUrl){window.open(data.checkoutUrl,'_blank','noopener,noreferrer');button.textContent='Checkout opened';return;}throw new Error('checkout unavailable');}catch(error){button.textContent='Contact support for checkout';location.href='mailto:support@aigeamy.com?subject=${encodeURIComponent(config.name)}%20checkout';setTimeout(()=>{button.disabled=false;button.textContent=label;},1200);}}));
+</script>
+</body>
+</html>`
+}
+
+function quickLaunchHome(config, requestUrl) {
+  const description = config.description
+  return quickLaunchShell(config, requestUrl, {
+    title: `${config.name} | ${config.product}`,
+    description,
+    body: `<main>
+<section class="hero"><div class="wrap hero-grid"><div><p class="eyebrow">${escapeHtml(config.product)}</p><h1>${escapeHtml(config.h1)}</h1><p class="lead">${escapeHtml(description)}</p><div class="actions"><button class="button primary" data-checkout data-plan-id="${config.defaultPlan}">${escapeHtml(config.primaryAction)}</button><a class="button" href="/pricing/?utm_source=${escapeHtml(requestUrl.hostname)}&utm_medium=hero_cta&utm_campaign=pricing">View pricing plans</a></div></div><aside class="panel"><h2>Decision snapshot</h2><p>Use this workspace to collect evidence, identify missing context, and decide whether the next approval, handoff, or payment is ready.</p><div class="facts">${config.facts.map((fact) => `<div>${escapeHtml(fact)}</div>`).join('')}</div></aside></div></section>
+<section class="section"><div class="wrap"><h2>What teams can check first</h2><div class="grid">${config.useCases.map((item) => `<article class="card"><h3>${escapeHtml(item)}</h3><p>Capture the current state, note the evidence source, identify blockers, and route the next action to the right owner.</p></article>`).join('')}</div></div></section>
+<section class="section"><div class="wrap"><h2>How the workflow helps searchers and buyers</h2><div class="grid"><article class="card"><h3>Input</h3><p>Paste non-secret notes, examples, evidence summaries, or checklist details that describe the current operational question.</p></article><article class="card"><h3>Review</h3><p>The workspace organizes tasks, risk signals, missing evidence, pricing context, support path, and a clear next step.</p></article><article class="card"><h3>Output</h3><p>Teams leave with a practical receipt: status, blockers, owner, next action, and checkout route for the paid workflow.</p></article></div></div></section>
+</main>`,
+  })
+}
+
+function quickLaunchPricing(config, requestUrl) {
+  const plans = Object.values(quickLaunchPlans(config))
+  return quickLaunchShell(config, requestUrl, {
+    title: `Pricing | ${config.name}`,
+    description: `Pricing for ${config.name} ${config.product}, annual checkout, support, and team review workflows.`,
+    path: '/pricing/',
+    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Pricing</p><h1>Choose the ${escapeHtml(config.name)} plan for your review rhythm.</h1><p class="lead">Annual checkout is selected by default and uses NOWPayments hosted checkout when payment credentials are available.</p><div class="grid">${plans.map((plan) => { const monthly = plan.monthlyAmountCents / 100; const annual = quickAnnualPrice(monthly); return `<article class="card"><h3>${escapeHtml(plan.name)}</h3><div class="price">$${monthly} <small>/mo</small></div><p>${escapeHtml(plan.summary)} Annual billing is $${annual} after the launch discount.</p><button class="button ${plan.featured ? 'primary' : ''}" data-checkout data-plan-id="${plan.id}">Checkout ${escapeHtml(plan.name)} annual</button></article>` }).join('')}</div></div></section></main>`,
+  })
+}
+
+function quickLaunchResources(config, requestUrl) {
+  return quickLaunchShell(config, requestUrl, {
+    title: `Resources | ${config.name}`,
+    description: `Resources for understanding ${config.name}, evidence review, operational handoff, pricing, support, and checkout steps.`,
+    path: '/resources/',
+    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Resources</p><h1>Understand the ${escapeHtml(config.product)} before the team commits.</h1><p class="lead">These notes explain who the product serves, what evidence to prepare, what risks to review, and how to move from public evaluation to paid support.</p><div class="grid"><article class="card"><h3>Who it serves</h3><p>${escapeHtml(config.name)} is for teams that need a repeatable way to review operational evidence and make a confident next-step decision.</p></article><article class="card"><h3>Evidence to prepare</h3><p>Use non-secret notes, recent examples, current blockers, handoff details, and expected outcome criteria.</p></article><article class="card"><h3>Next step</h3><p>Open pricing, select the Team annual plan, and keep support available if hosted checkout needs manual follow-up.</p></article></div></div></section></main>`,
+  })
+}
+
+function quickLaunchPolicy(config, requestUrl, kind) {
+  const privacy = kind === 'privacy'
+  return quickLaunchShell(config, requestUrl, {
+    title: `${privacy ? 'Privacy Policy' : 'Terms of Service'} | ${config.name}`,
+    description: `${privacy ? 'Privacy policy' : 'Terms of service'} for ${config.name} and its ${config.product}.`,
+    path: privacy ? '/privacy/' : '/terms/',
+    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">${privacy ? 'Privacy' : 'Terms'}</p><h1>${privacy ? 'Privacy Policy' : 'Terms of Service'}</h1><p class="lead">Effective date: June 8, 2026. ${escapeHtml(config.name)} is a global ${escapeHtml(config.product)}.</p><div class="grid"><article class="card"><h3>${privacy ? 'Information processed' : 'Service scope'}</h3><p>${privacy ? 'We process submitted non-secret notes, checkout metadata, support messages, and technical analytics needed to operate the service.' : 'The service provides operational review workflows, evidence organization, support, and checkout paths for the product described on this site.'}</p></article><article class="card"><h3>${privacy ? 'Use and retention' : 'User responsibilities'}</h3><p>${privacy ? 'Information is used for service delivery, fraud prevention, support, improvement, and legal compliance, and retained only as reasonably needed.' : 'Users must avoid submitting secrets, verify recommendations before production use, and comply with applicable laws and third-party terms.'}</p></article><article class="card"><h3>${privacy ? 'Contact' : 'Limitations'}</h3><p>${privacy ? 'Privacy and support requests can be sent to support@aigeamy.com.' : 'Outputs are operational aids and do not guarantee rankings, uptime, revenue, payment approval, or business outcomes.'}</p></article></div></div></section></main>`,
+  })
+}
+
+function quickLaunchCheckout(config, requestUrl) {
+  return quickLaunchShell(config, requestUrl, {
+    title: `Checkout | ${config.name}`,
+    description: `Start ${config.name} checkout through hosted payment or support fallback.`,
+    path: '/checkout/',
+    robots: 'noindex,follow',
+    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Checkout</p><h1>Start ${escapeHtml(config.name)} checkout.</h1><p class="lead">The Team annual plan is selected by default. The product page stays open while NOWPayments hosted checkout opens in a new tab when available.</p><div class="actions"><button class="button primary" data-checkout data-plan-id="${config.defaultPlan}">${escapeHtml(config.primaryAction)}</button><a class="button" href="/pricing/">View pricing plans</a></div><p class="notice">If hosted checkout cannot open, the support fallback lets a buyer request the correct payment link without losing the product page.</p></div></section></main>`,
+  })
+}
+
+function quickLaunchLlms(config, requestUrl) {
+  const origin = quickLaunchOrigin(requestUrl)
+  return `# ${config.name}
+
+${config.name} is a ${config.product} for global teams.
+
+Canonical site: ${origin}
+Support: support@aigeamy.com
+Updated: 2026-06-08
+
+Primary use cases:
+${config.useCases.map((item) => `- ${item}`).join('\n')}
+
+Key pages:
+- ${origin}/
+- ${origin}/pricing/
+- ${origin}/resources/
+- ${origin}/privacy/
+- ${origin}/terms/
+`
+}
+
+function quickLaunchSitemap(requestUrl) {
+  const origin = quickLaunchOrigin(requestUrl)
+  const paths = ['/', '/pricing/', '/resources/', '/privacy/', '/terms/']
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${paths.map((path) => `  <url><loc>${origin}${path === '/' ? '/' : path}</loc><lastmod>2026-06-08</lastmod><changefreq>${path === '/' ? 'daily' : 'weekly'}</changefreq><priority>${path === '/' ? '1.0' : '0.7'}</priority></url>`).join('\n')}
+</urlset>
+`
+}
+
+function quickLaunchRobots(requestUrl) {
+  return `User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /checkout/
+Disallow: /success/
+Sitemap: ${quickLaunchOrigin(requestUrl)}/sitemap.xml
+`
+}
+
+async function handleQuickLaunchSite(request, env, requestUrl, config) {
+  const canonicalHost = requestUrl.hostname.replace(/^www\./, '')
+  if ((request.method === 'GET' || request.method === 'HEAD') && (requestUrl.hostname !== canonicalHost || requestUrl.protocol !== 'https:')) {
+    const redirectUrl = new URL(requestUrl)
+    redirectUrl.protocol = 'https:'
+    redirectUrl.hostname = canonicalHost
+    return Response.redirect(redirectUrl.toString(), 301)
+  }
+
+  if (request.method === 'OPTIONS' && requestUrl.pathname.startsWith('/api/')) return handleOptions(request)
+  if (requestUrl.pathname === '/api/runtime') {
+    const apiKey = await firstSecretEnv(env, 'NOWPAYMENTS_API_KEY', 'NOWPAYMENTS_KEY')
+    return jsonResponse({
+      ok: true,
+      siteKey: quickLaunchSiteKey(requestUrl),
+      product: config.name,
+      canonicalOrigin: quickLaunchOrigin(requestUrl),
+      payment: {
+        provider: 'nowpayments',
+        configured: Boolean(apiKey),
+        defaultPlan: config.defaultPlan,
+        defaultBilling: 'annual',
+        payCurrency: String(env?.NOWPAYMENTS_PAY_CURRENCY || 'USDCMATIC').trim().toUpperCase(),
+      },
+      analytics: Boolean(env?.DB || env?.ANALYTICS_DB),
+    }, 200, request)
+  }
+  if (requestUrl.pathname === '/api/checkout') {
+    return handleNowPaymentsCheckout(request, env, {
+      plans: quickLaunchPlans(config),
+      defaultPlanId: config.defaultPlan,
+      defaultBilling: 'annual',
+      annualDiscountMultiplier: ANNUAL_DISCOUNT_MULTIPLIER,
+      siteKey: quickLaunchSiteKey(requestUrl),
+      siteName: config.name,
+      successPath: '/success/',
+      resolveOrigin: () => quickLaunchOrigin(requestUrl),
+    })
+  }
+
+  const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  if (normalizedPath === '/robots.txt') {
+    const headers = securityHeaders(request)
+    headers.set('Content-Type', 'text/plain; charset=utf-8')
+    return new Response(quickLaunchRobots(requestUrl), { status: 200, headers })
+  }
+  if (normalizedPath === '/sitemap.xml') {
+    const headers = securityHeaders(request)
+    headers.set('Content-Type', 'application/xml; charset=utf-8')
+    return new Response(quickLaunchSitemap(requestUrl), { status: 200, headers })
+  }
+  if (normalizedPath === '/llms.txt') {
+    const headers = securityHeaders(request)
+    headers.set('Content-Type', 'text/plain; charset=utf-8')
+    return new Response(quickLaunchLlms(config, requestUrl), { status: 200, headers })
+  }
+
+  let html = ''
+  if (normalizedPath === '/') html = quickLaunchHome(config, requestUrl)
+  else if (normalizedPath === '/pricing') html = quickLaunchPricing(config, requestUrl)
+  else if (normalizedPath === '/resources') html = quickLaunchResources(config, requestUrl)
+  else if (normalizedPath === '/privacy') html = quickLaunchPolicy(config, requestUrl, 'privacy')
+  else if (normalizedPath === '/terms') html = quickLaunchPolicy(config, requestUrl, 'terms')
+  else if (normalizedPath === '/checkout') html = quickLaunchCheckout(config, requestUrl)
+  else return noIndexNotFoundResponse(request)
+
+  if (normalizedPath !== '/' && !requestUrl.pathname.endsWith('/')) {
+    const redirectUrl = new URL(requestUrl)
+    redirectUrl.pathname = `${normalizedPath}/`
+    return Response.redirect(redirectUrl.toString(), 308)
+  }
+
+  const headers = securityHeaders(request)
+  headers.set('Content-Type', 'text/html; charset=utf-8')
+  headers.set('Cache-Control', 'public, max-age=300')
+  return new Response(html, { status: 200, headers })
+}
+
 function normalizeManagedSitemapPath(rawPath) {
   const pathname = `/${String(rawPath || '/').replace(/^\/+/, '')}`
   const normalized = pathname.replace(/\/+$/, '') || '/'
@@ -1357,6 +1679,9 @@ export async function handleRequest(request, env) {
     }
     return handleSaasManagementPlatform(request, env, requestUrl)
   }
+
+  const quickLaunchSite = quickLaunchSites.get(requestUrl.hostname)
+  if (quickLaunchSite) return handleQuickLaunchSite(request, env, requestUrl, quickLaunchSite)
 
   const managedCanonicalRedirect = maybeRedirectManagedCanonical(request, requestUrl)
   if (managedCanonicalRedirect) return managedCanonicalRedirect
