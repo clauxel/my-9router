@@ -59,7 +59,12 @@ type CheckoutModalState = {
 }
 
 const ctaPrimary = 'Choose Pro annual'
-const ctaCheckout = 'Checkout Pro annual'
+const ctaCheckout = 'Continue with Pro'
+
+type PricingFeature = {
+  label: string
+  included?: boolean
+}
 
 const plans: Array<{
   id: PlanId
@@ -67,39 +72,67 @@ const plans: Array<{
   shortName: string
   tagline: string
   monthlyUsd: number
-  bullets: string[]
+  annualDiscountMultiplier?: number
+  bullets: PricingFeature[]
   popular?: boolean
 }> = [
   {
     id: 'starter',
     name: 'Starter',
     shortName: 'Starter',
-    tagline: 'A focused 9router setup for one operator and one coding tool.',
-    monthlyUsd: 29,
-    bullets: ['One route plan', 'Npm or local install review', 'Basic provider stack', 'Email support'],
+    tagline: 'Perfect for individuals validating one 9router workflow for the first time.',
+    monthlyUsd: 9,
+    annualDiscountMultiplier: 1,
+    bullets: [
+      { label: 'One route plan' },
+      { label: 'Npm or local install review' },
+      { label: 'Basic provider stack' },
+      { label: 'Email support' },
+      { label: 'Docker persistence review', included: false },
+      { label: 'RTK and fallback policy', included: false },
+      { label: 'Dedicated rollout support', included: false },
+    ],
   },
   {
     id: 'pro',
     name: 'Pro',
     shortName: 'Pro',
-    tagline: 'The default rollout for teams running 9router across AI coding tools.',
-    monthlyUsd: 99,
+    tagline: 'For developers and product teams running regular 9router routing workflows.',
+    monthlyUsd: 29,
+    annualDiscountMultiplier: 0.5,
     popular: true,
-    bullets: ['Codex, Cursor, and Antigravity route plan', 'Docker persistence review', 'RTK and fallback policy', 'Priority onboarding'],
+    bullets: [
+      { label: 'Codex, Cursor, and Antigravity route plan' },
+      { label: 'Docker persistence review' },
+      { label: 'RTK and fallback policy' },
+      { label: 'Provider and budget controls' },
+      { label: 'Priority onboarding' },
+      { label: 'Security and log posture' },
+      { label: 'Custom deployment', included: false },
+    ],
   },
   {
     id: 'ops',
-    name: 'Operations',
-    shortName: 'Ops',
-    tagline: 'For secured endpoints, provider governance, and heavier rollout work.',
-    monthlyUsd: 249,
-    bullets: ['Cloud endpoint planning', 'Provider and budget controls', 'Security and log posture', 'Dedicated rollout support'],
+    name: 'Enterprise',
+    shortName: 'Enterprise',
+    tagline: 'For organizations needing secured endpoints, custom rollout, and dedicated support.',
+    monthlyUsd: 59,
+    annualDiscountMultiplier: 1,
+    bullets: [
+      { label: 'Cloud endpoint planning' },
+      { label: 'Provider and budget controls' },
+      { label: 'Security and log posture' },
+      { label: 'Dedicated rollout support' },
+      { label: 'Multi-team rollout governance' },
+      { label: 'Custom deployment review' },
+      { label: 'SLA and compliance support' },
+    ],
   },
 ]
 
 const proofItems = [
   { label: 'Default plan', value: 'Pro', detail: 'Middle tier selected before checkout' },
-  { label: 'Annual savings', value: '50%', detail: 'Annual billing is active by default' },
+  { label: 'Pro annual savings', value: '50%', detail: 'Pro yearly checkout is selected by default' },
   { label: 'Token posture', value: '20-40%', detail: 'RTK-style tool output savings' },
   { label: 'Route depth', value: '3 tiers', detail: 'Subscription, cheap, then free continuity' },
 ]
@@ -227,7 +260,7 @@ const legalTermsSections = [
     title: 'Payments, renewals, and refunds',
     paragraphs: [
       'Payments are processed by Creem in a hosted popup window. Successful checkouts return the user to the homepage.',
-      'Displayed annual pricing reflects a 50% discount versus the monthly run-rate for the same plan. Prices, plan names, features, and availability may change before purchase.',
+      'Displayed Pro annual pricing reflects a 50% discount versus the Pro monthly run-rate. Starter and Enterprise can also be purchased for a fixed period without automatic renewal. Prices, plan names, features, and availability may change before purchase.',
       'Unless a separate written agreement says otherwise, purchases are final to the maximum extent permitted by law. If the payment provider, consumer law, or a written policy requires a refund, that required rule controls.',
       'Chargebacks, payment abuse, or attempted circumvention of checkout may result in suspension, cancellation, or refusal of service.',
     ],
@@ -752,8 +785,8 @@ export default function App() {
       <div className="nr-section-head nr-pricing-head">
         <div>
           <p className="nr-eyebrow">Pricing</p>
-          <h2>Pro is selected because real 9router rollout needs provider policy, fallback, and install support.</h2>
-          <p>Annual billing is active by default and is 50% cheaper than paying month to month.</p>
+          <h2>Start lean, scale as you grow.</h2>
+          <p>Every plan uses one-time checkout with no automatic renewal. Pro annual gets the 50% yearly discount.</p>
         </div>
         <div className="nr-cycle" role="group" aria-label="Billing cycle">
           <button
@@ -774,15 +807,30 @@ export default function App() {
               trackEvent('billing_cycle_change', { billing: 'annual' })
             }}
           >
-            Annual - 50% off
+            Yearly - 50% off
           </button>
+        </div>
+      </div>
+
+      <div className="nr-renewal-notice" role="note" aria-label="No automatic renewal">
+        <CheckCircle2 size={18} />
+        <div>
+          <strong>No automatic renewal</strong>
+          <p>After checkout, 9router Space will not automatically charge you next month or next year. Monthly and yearly purchases only cover the period you choose today.</p>
         </div>
       </div>
 
       <div className="nr-plan-grid">
         {plans.map((plan) => {
-          const monthly = billing === 'annual' ? plan.monthlyUsd * 0.5 : plan.monthlyUsd
-          const strike = billing === 'annual' ? plan.monthlyUsd : null
+          const annualMultiplier = plan.annualDiscountMultiplier ?? 1
+          const annualTotal = plan.monthlyUsd * 12 * annualMultiplier
+          const monthly = billing === 'annual' ? annualTotal / 12 : plan.monthlyUsd
+          const strike = billing === 'annual' && annualMultiplier < 1 ? plan.monthlyUsd : null
+          const pricePeriod = billing === 'annual' ? '/mo for one year' : '/month'
+          const billingNote =
+            billing === 'annual'
+              ? `${formatMoney(annualTotal)} due today for one year. No automatic charge next year.`
+              : `${formatMoney(plan.monthlyUsd)} due today for one month. No automatic charge next month.`
           const loadingKey = `plan-${plan.id}-${billing}`
           const active = selectedPlanId === plan.id
 
@@ -793,17 +841,15 @@ export default function App() {
               <p>{plan.tagline}</p>
               <div className="nr-price-line">
                 {formatMoney(monthly)}
-                <small>/mo</small>
+                <small>{pricePeriod}</small>
                 {strike ? <span>{formatMoney(strike)}</span> : null}
               </div>
-              <strong className="nr-billing-note">
-                {billing === 'annual' ? `${formatMoney(monthly * 12)} billed annually` : 'Billed monthly'}
-              </strong>
+              <strong className="nr-billing-note">{billingNote}</strong>
               <ul>
                 {plan.bullets.map((bullet) => (
-                  <li key={bullet}>
-                    <Check size={15} />
-                    {bullet}
+                  <li data-included={bullet.included === false ? 'false' : 'true'} key={bullet.label}>
+                    {bullet.included === false ? <span className="nr-feature-dash">-</span> : <Check size={15} />}
+                    {bullet.label}
                   </li>
                 ))}
               </ul>
@@ -815,7 +861,7 @@ export default function App() {
                   onMouseEnter={() => setSelectedPlanId(plan.id)}
                   disabled={checkoutLoadingKey !== null}
                 >
-                  {checkoutLoadingKey === loadingKey ? 'Opening secure checkout...' : plan.id === 'pro' ? ctaCheckout : `Checkout ${plan.shortName} ${billing}`}
+                  {checkoutLoadingKey === loadingKey ? 'Opening secure checkout...' : plan.id === 'pro' ? ctaCheckout : `Continue with ${plan.shortName}`}
                 </button>
                 <button
                   type="button"
@@ -836,11 +882,11 @@ export default function App() {
         <div className="nr-faq-grid">
           <article>
             <h3>Why is Pro selected first?</h3>
-            <p>Most teams need route design, Docker or endpoint review, and provider fallback policy. Starter is useful for one operator, but Pro fits the serious evaluation.</p>
+            <p>Starter is useful for one operator, but Pro fits the serious evaluation because it includes Docker review, fallback policy, provider controls, and priority onboarding.</p>
           </article>
           <article>
             <h3>Why annual by default?</h3>
-            <p>Router adoption usually spans more than one billing cycle. Annual pricing cuts the monthly run-rate by 50%.</p>
+            <p>Router adoption usually spans more than one billing cycle. Pro annual cuts the Pro monthly run-rate by 50%.</p>
           </article>
           <article>
             <h3>Does payment replace this page?</h3>
@@ -894,7 +940,7 @@ export default function App() {
             </div>
             <p className="nr-payment-note">
               <CheckCircle2 size={16} />
-              <span>Pro annual selected. Annual saves 50%. Hosted SaaS: pay here, then use the managed workspace; no self-hosting needed.</span>
+              <span>Pro annual selected. Pro yearly saves 50%. Hosted SaaS: pay here, then use the managed workspace; no self-hosting needed.</span>
             </p>
 
             <div className="nr-trust-row">
@@ -1011,7 +1057,7 @@ export default function App() {
                 path: '/pricing',
                 eyebrow: 'Pricing',
                 h1: '9router Space pricing',
-                intent: 'Choose Starter, Pro, or Operations with Pro annual already selected.',
+                intent: 'Choose Starter, Pro, or Enterprise with Pro annual already selected.',
               },
             ].map((page) => (
               <a
@@ -1089,7 +1135,7 @@ export default function App() {
           <div>
             <p className="nr-eyebrow">Recommended next step</p>
             <h2>Use the route planner, then keep Pro annual selected if the setup fits.</h2>
-            <p>Checkout stays in a centered Creem popup, with annual billing selected by default.</p>
+            <p>Checkout stays in a centered Creem popup, with Pro annual selected by default.</p>
           </div>
           <div className="nr-article-cta-actions">
             <button type="button" className="nr-btn nr-btn-primary" onClick={() => chooseProAnnual(`article-${page.path}`)}>
@@ -1110,9 +1156,9 @@ export default function App() {
     <main className="nr-main">
       <section className="nr-pricing-page-hero">
         <p className="nr-eyebrow">Pricing</p>
-        <h1>9router Space pricing starts with Pro selected and annual billing already on.</h1>
+        <h1>9router Space pricing follows the Starter, Pro, and Enterprise path.</h1>
         <p className="nr-lede">
-          Starter is for one bounded install. Pro is the default for a serious 9router team rollout. Operations is for secured endpoints, provider governance, and heavier deployment work.
+          Starter is for one bounded install. Pro is the default for regular 9router rollout work. Enterprise is for secured endpoints, provider governance, and heavier deployment support.
         </p>
       </section>
       {renderPricingSection(true)}

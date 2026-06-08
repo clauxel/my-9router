@@ -104,8 +104,8 @@ export function buildSeoDocument(args: {
           offers: {
             '@type': 'AggregateOffer',
             priceCurrency: 'USD',
-            lowPrice: '14.50',
-            highPrice: '124.50',
+            lowPrice: '9',
+            highPrice: '59',
             availability: 'https://schema.org/InStock',
           },
           description: defaultDescription,
@@ -130,7 +130,7 @@ export function buildSeoDocument(args: {
   if (routeView === 'pricing') {
     const title = '9router Space Pricing | Pro Annual AI Router Rollout'
     const description =
-      'Compare 9router Space Starter, Pro, and Operations plans. Pro annual is selected by default and annual billing is 50% cheaper than monthly.'
+      'Compare 9router Space Starter, Pro, and Enterprise plans. Pro annual is selected by default with a 50% yearly discount and no automatic renewal.'
     return {
       title,
       description,

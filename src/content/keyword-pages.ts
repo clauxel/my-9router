@@ -366,7 +366,7 @@ export const keywordPages: KeywordPage[] = [
       {
         question: 'Why is annual billing selected?',
         answer:
-          'Router adoption usually lasts longer than one month. Annual billing is selected by default and is 50% cheaper than the monthly run-rate.',
+          'Router adoption usually lasts longer than one month. Pro annual is selected by default and is 50% cheaper than the Pro monthly run-rate.',
       },
     ],
   },

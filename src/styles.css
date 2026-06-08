@@ -737,6 +737,37 @@ h3 {
   background: #0f766e;
 }
 
+.nr-renewal-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  max-width: 760px;
+  margin: -10px 0 20px;
+  padding: 14px 16px;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 16px 34px rgba(23, 33, 29, 0.07);
+}
+
+.nr-renewal-notice svg {
+  flex: 0 0 auto;
+  color: var(--green);
+  margin-top: 2px;
+}
+
+.nr-renewal-notice strong {
+  display: block;
+  color: var(--ink);
+  font-size: 0.96rem;
+}
+
+.nr-renewal-notice p {
+  margin: 2px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+}
+
 .nr-plan-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -748,7 +779,7 @@ h3 {
   display: grid;
   align-content: start;
   gap: 14px;
-  min-height: 504px;
+  min-height: 612px;
   padding: 22px;
   border-radius: var(--radius);
   background: #fff;
@@ -852,6 +883,19 @@ h3 {
   align-items: flex-start;
   color: currentColor;
   opacity: 0.88;
+}
+
+.nr-plan-card li[data-included="false"] {
+  opacity: 0.55;
+}
+
+.nr-feature-dash {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 15px;
+  width: 15px;
+  height: 18px;
+  font-weight: 900;
 }
 
 .nr-plan-actions {

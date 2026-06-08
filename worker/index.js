@@ -87,6 +87,7 @@ import { handleRequest as handleRound27Unitymcptest } from './round27/unitymcpte
 import { handleRequest as handleRound27Codegworkspace } from './round27/codegworkspace/index.js'
 import { handleRequest as handleRound27Vm0workqueue } from './round27/vm0workqueue/index.js'
 import { handleRequest as handleRound27Simstudiohost } from './round27/simstudiohost/index.js'
+import { handleRequest as handleRound27Openllmvtuber } from './round27/openllmvtuber/index.js'
 import { handleRequest as handleRound27Decapodkernel } from './round27/decapodkernel/index.js'
 import { handleRequest as handleSaasManagementPlatform } from './management/saas-management-platform.js'
 
@@ -254,6 +255,8 @@ const round27Sites = new Map([
   ['www.vm0workqueue.space', { project: 'vm0workqueue', handler: handleRound27Vm0workqueue }],
   ['simstudiohost.space', { project: 'simstudiohost', handler: handleRound27Simstudiohost }],
   ['www.simstudiohost.space', { project: 'simstudiohost', handler: handleRound27Simstudiohost }],
+  ['open-llm-vtuber.space', { project: 'open-llm-vtuber', handler: handleRound27Openllmvtuber }],
+  ['www.open-llm-vtuber.space', { project: 'open-llm-vtuber', handler: handleRound27Openllmvtuber }],
   ['decapodkernel.clauxel.com', { project: 'decapodkernel', handler: handleRound27Decapodkernel }],
 ])
 
@@ -358,6 +361,8 @@ const diversifiedStaticSites = new Map([
   ['gomodelgateway.space', { project: 'gomodelgateway' }],
   ['www.gomodelgateway.space', { project: 'gomodelgateway' }],
   ['headroomcompress.clauxel.com', { project: 'headroomcompress' }],
+  ['hermesagentrun.space', { project: 'hermesagentrun' }],
+  ['www.hermesagentrun.space', { project: 'hermesagentrun' }],
   ['hermesagentrun.clauxel.com', { project: 'hermesagentrun' }],
   ['holaosworkstream.space', { project: 'holaosworkstream' }],
   ['www.holaosworkstream.space', { project: 'holaosworkstream' }],
@@ -458,21 +463,24 @@ const planCatalog = {
   starter: {
     id: 'starter',
     name: 'Starter',
-    monthlyAmountCents: 2900,
+    monthlyAmountCents: 900,
+    annualDiscountMultiplier: 1,
     currency: 'USD',
     summary: 'one-operator 9router setup',
   },
   pro: {
     id: 'pro',
     name: 'Pro',
-    monthlyAmountCents: 9900,
+    monthlyAmountCents: 2900,
+    annualDiscountMultiplier: 0.5,
     currency: 'USD',
     summary: 'default managed 9router team rollout',
   },
   ops: {
     id: 'ops',
-    name: 'Operations',
-    monthlyAmountCents: 24900,
+    name: 'Enterprise',
+    monthlyAmountCents: 5900,
+    annualDiscountMultiplier: 1,
     currency: 'USD',
     summary: 'secured endpoint and provider governance rollout',
   },
@@ -695,22 +703,46 @@ function handleOptions(request) {
   return new Response(null, { status: 204, headers: securityHeaders(request) })
 }
 
+function htmlCanonicalUrl(requestUrl) {
+  const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  return `${requestUrl.origin}${normalizedPath === '/' ? '/' : `${normalizedPath}/`}`
+}
+
+async function withManagedStaticHtmlMetadata(response, requestUrl) {
+  const contentType = response.headers.get('Content-Type') || ''
+  if (response.status !== 200 || !contentType.toLowerCase().includes('text/html')) return response
+
+  const canonicalUrl = htmlCanonicalUrl(requestUrl)
+  let body = await response.text()
+
+  if (/<link\s+[^>]*rel=["']canonical["'][^>]*>/i.test(body)) {
+    body = body.replace(/<link\s+[^>]*rel=["']canonical["'][^>]*>/i, `<link rel="canonical" href="${canonicalUrl}">`)
+  } else {
+    body = body.replace(/<\/head>/i, `  <link rel="canonical" href="${canonicalUrl}">\n</head>`)
+  }
+
+  body = body.replace(/<meta\s+[^>]*property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${canonicalUrl}">`)
+  body = body.replace(/<meta\s+[^>]*content=["'][^"']*["'][^>]*property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${canonicalUrl}">`)
+
+  const headers = new Headers(response.headers)
+  headers.delete('Content-Length')
+  return new Response(body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  })
+}
+
 async function handleStaticRoundSite(request, env, requestUrl) {
   const pathname = requestUrl.pathname.replace(/\/+$/, '') || '/'
   if (request.method === 'OPTIONS' && pathname.startsWith('/api/')) return handleOptions(request)
-  if (pathname === '/api/runtime') return handleRuntime(request, requestUrl)
-  if (pathname === '/api/checkout') return handleCheckout(request, env, requestUrl)
+  if (pathname === '/api/runtime') return handleManagedRuntime(request, env, requestUrl)
+  if (pathname === '/api/checkout') return handleManagedNowPaymentsCheckout(request, env, requestUrl)
   if (pathname === '/api/nowpayments-checkout') {
-    return handleNowPaymentsCheckout(request, env, {
-      plans: planCatalog,
-      defaultPlanId: 'pro',
-      siteName: requestUrl.hostname,
-      siteKey: requestUrl.hostname.replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'external-site',
-      annualDiscountMultiplier: typeof ANNUAL_DISCOUNT_MULTIPLIER !== 'undefined'
-        ? ANNUAL_DISCOUNT_MULTIPLIER
-        : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
-    })
+    return handleManagedNowPaymentsCheckout(request, env, requestUrl)
   }
+  const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, env, requestUrl)
+  if (publicMetadataResponse) return publicMetadataResponse
 
   if (!env?.ASSETS?.fetch) {
     return new Response('Static assets are not bound for this deployment.', {
@@ -723,12 +755,107 @@ async function handleStaticRoundSite(request, env, requestUrl) {
     const assetUrl = new URL(request.url)
     assetUrl.pathname = `${pathname}/index.html`
     const assetResponse = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
-    if (assetResponse.status !== 404) return assetResponse
+    if (assetResponse.status !== 404) return withManagedStaticHtmlMetadata(assetResponse, requestUrl)
+    return noIndexNotFoundResponse(request)
   }
 
   const assetUrl = new URL(request.url)
   if (pathname === '/') assetUrl.pathname = '/index.html'
-  return env.ASSETS.fetch(new Request(assetUrl.toString(), request))
+  return withManagedStaticHtmlMetadata(await env.ASSETS.fetch(new Request(assetUrl.toString(), request)), requestUrl)
+}
+
+const canonicalRedirectExemptHosts = new Set([
+  'mirofish.work',
+  'www.mirofish.work',
+  'mirofish.best',
+  'www.mirofish.best',
+  'mirofishguide.space',
+  'www.mirofishguide.space',
+  'ruflo.online',
+  'www.ruflo.online',
+])
+
+function managedExternalSite(hostname) {
+  return vercelSites.get(hostname) ||
+    round27Sites.get(hostname) ||
+    diversifiedStaticSites.get(hostname) ||
+    round17Sites.get(hostname) ||
+    round18Sites.get(hostname) ||
+    round22Sites.get(hostname) ||
+    round23Sites.get(hostname) ||
+    round24Sites.get(hostname) ||
+    round25Sites.get(hostname) ||
+    round26Sites.get(hostname)
+}
+
+function maybeRedirectManagedCanonical(request, requestUrl) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return null
+
+  const host = requestUrl.hostname.toLowerCase()
+  if (canonicalRedirectExemptHosts.has(host)) return null
+
+  const canonicalHost = host.startsWith('www.') ? host.slice(4) : host
+  if (canonicalRedirectExemptHosts.has(canonicalHost)) return null
+  if (!managedExternalSite(canonicalHost)) return null
+
+  if (host !== canonicalHost || requestUrl.protocol !== 'https:') {
+    const redirectUrl = new URL(requestUrl)
+    redirectUrl.protocol = 'https:'
+    redirectUrl.hostname = canonicalHost
+    return Response.redirect(redirectUrl.toString(), 301)
+  }
+
+  return null
+}
+
+const managedMarketingAllowedExactPaths = new Set([
+  '/',
+  '/checkout/done',
+  '/checkout',
+  '/checkout/success',
+  '/docs',
+  '/guides',
+  '/plans',
+  '/pricing',
+  '/privacy',
+  '/resources',
+  '/solutions',
+  '/terms',
+])
+
+const managedMarketingAllowedPrefixes = [
+  '/.well-known/',
+  '/blog/',
+  '/case-studies/',
+  '/compare/',
+  '/docs/',
+  '/guides/',
+  '/resources/',
+  '/solutions/',
+  '/use-cases/',
+]
+
+async function hasManagedStaticPageAsset(request, env, normalizedPath) {
+  if (!env?.ASSETS?.fetch) return false
+  if (normalizedPath === '/' || /\.[a-z0-9]+$/i.test(normalizedPath)) return false
+
+  const assetUrl = new URL(request.url)
+  assetUrl.pathname = `${normalizedPath}/index.html`
+  const assetResponse = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
+  return assetResponse.status !== 404
+}
+
+async function maybeReturnManagedMarketingNotFound(request, env, requestUrl) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return null
+
+  const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  if (normalizedPath.startsWith('/api/')) return null
+  if (/\.[a-z0-9]+$/i.test(normalizedPath)) return null
+  if (managedMarketingAllowedExactPaths.has(normalizedPath)) return null
+  if (managedMarketingAllowedPrefixes.some((prefix) => normalizedPath.startsWith(prefix))) return null
+  if (await hasManagedStaticPageAsset(request, env, normalizedPath)) return null
+
+  return noIndexNotFoundResponse(request)
 }
 
 function maybeRedirectToHttps(requestUrl) {
@@ -753,6 +880,44 @@ function resolvePublicAppOrigin(requestUrl) {
   }
 
   return requestUrl.origin
+}
+
+function managedSiteKeyFromHost(hostname) {
+  return hostname.replace(/^www\./, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'managed-site'
+}
+
+function handleManagedNowPaymentsCheckout(request, env, requestUrl) {
+  return handleNowPaymentsCheckout(request, env, {
+    plans: planCatalog,
+    defaultPlanId: 'pro',
+    defaultBilling: 'annual',
+    siteName: requestUrl.hostname,
+    siteKey: managedSiteKeyFromHost(requestUrl.hostname),
+    annualDiscountMultiplier: typeof ANNUAL_DISCOUNT_MULTIPLIER !== 'undefined'
+      ? ANNUAL_DISCOUNT_MULTIPLIER
+      : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
+    resolveOrigin: () => resolvePublicAppOrigin(requestUrl),
+  })
+}
+
+async function handleManagedRuntime(request, env, requestUrl) {
+  const apiKey = await firstSecretEnv(env, 'NOWPAYMENTS_API_KEY', 'NOWPAYMENTS_KEY')
+  return jsonResponse(
+    {
+      ok: true,
+      publicAppOrigin: resolvePublicAppOrigin(requestUrl),
+      deployment: 'cloudflare-workers-assets',
+      paymentProvider: 'nowpayments',
+      nowpaymentsConfigured: Boolean(apiKey),
+      payCurrency: String(env?.NOWPAYMENTS_PAY_CURRENCY || 'USDCMATIC').trim().toUpperCase(),
+      defaultPlan: 'pro',
+      defaultBilling: 'annual',
+      annualDiscount: '50%',
+      ts: Date.now(),
+    },
+    200,
+    request,
+  )
 }
 
 function resolveCreemBase(env) {
@@ -796,11 +961,17 @@ function formatMoney(amountCents, currency) {
 function resolveConfiguredProductId(env, planId, billing) {
   const cycle = billing === 'monthly' ? 'MONTHLY' : 'YEARLY'
   const tier = planId === 'ops' ? 'OPS' : planId === 'starter' ? 'STARTER' : 'PRO'
+  const alternateTier = planId === 'ops' ? 'ENTERPRISE' : tier
   const normalizedSelection = normalizeEnvKey(`${planId}_${billing}`)
+  const alternateSelection = planId === 'ops' ? normalizeEnvKey(`enterprise_${billing}`) : normalizedSelection
   const keys = [
+    `CREEM_PRODUCT_${alternateTier}_${cycle}`,
     `CREEM_PRODUCT_${tier}_${cycle}`,
+    `CREEM_PRODUCT_ID_9ROUTER_${alternateSelection}`,
     `CREEM_PRODUCT_ID_9ROUTER_${normalizedSelection}`,
+    `CREEM_PRODUCT_ID_${alternateSelection}`,
     `CREEM_PRODUCT_ID_${normalizedSelection}`,
+    `CREEM_PRODUCT_ID_${alternateTier}`,
     `CREEM_PRODUCT_ID_${tier}`,
     'CREEM_PRODUCT_ID',
   ]
@@ -850,8 +1021,10 @@ async function getOrCreateCreemProduct(env, apiKey, plan, billing, successUrl) {
   const cacheKey = `${plan.id}:${billing}`
   if (creemProductCache.has(cacheKey)) return creemProductCache.get(cacheKey)
 
+  const annualMultiplier = Number(plan.annualDiscountMultiplier ?? ANNUAL_DISCOUNT_MULTIPLIER)
+  const safeAnnualMultiplier = Number.isFinite(annualMultiplier) && annualMultiplier > 0 ? annualMultiplier : 1
   const monthlyAmountCents =
-    billing === 'annual' ? Math.round(plan.monthlyAmountCents * ANNUAL_DISCOUNT_MULTIPLIER) : plan.monthlyAmountCents
+    billing === 'annual' ? Math.round(plan.monthlyAmountCents * safeAnnualMultiplier) : plan.monthlyAmountCents
   const totalAmountCents = billing === 'annual' ? monthlyAmountCents * 12 : monthlyAmountCents
   const billingLabel = billing === 'annual' ? 'annual' : 'monthly'
 
@@ -910,7 +1083,8 @@ async function handleCheckout(request, env, requestUrl) {
     return jsonResponse({ ok: false, error: 'Invalid JSON body.' }, 400, request)
   }
 
-  const planId = typeof body?.planId === 'string' ? body.planId : 'pro'
+  const rawPlanId = typeof body?.planId === 'string' ? body.planId : typeof body?.plan === 'string' ? body.plan : 'pro'
+  const planId = rawPlanId === 'enterprise' ? 'ops' : rawPlanId
   const billing = body?.billing === 'monthly' ? 'monthly' : 'annual'
   const plan = planCatalog[planId] || planCatalog.pro
   const successUrl = `${resolvePublicAppOrigin(requestUrl)}/checkout/done`
@@ -1007,6 +1181,105 @@ function noIndexNotFoundResponse(request) {
   return new Response('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Page not found</title></head><body><main><h1>Page not found</h1><p>This URL is not a public page for this product.</p></main></body></html>', { status: 404, headers })
 }
 
+function managedCanonicalOrigin(requestUrl) {
+  return `https://${requestUrl.hostname.replace(/^www\./, '')}`
+}
+
+function normalizeManagedSitemapPath(rawPath) {
+  const pathname = `/${String(rawPath || '/').replace(/^\/+/, '')}`
+  const normalized = pathname.replace(/\/+$/, '') || '/'
+  if (normalized.startsWith('/api/')) return null
+  if (normalized.startsWith('/.well-known/')) return null
+  if ([
+    '/checkout',
+    '/checkout/done',
+    '/checkout/success',
+    '/robots.txt',
+    '/sitemap.xml',
+    '/success',
+    '/llms.txt',
+  ].includes(normalized)) return null
+  if (/\.(xml|txt|json|js|css|png|jpg|jpeg|webp|svg|ico|map|pdf|zip)$/i.test(normalized)) return null
+  return normalized === '/' ? '/' : `${normalized}/`
+}
+
+function escapeXml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+}
+
+function buildManagedSitemapXml(paths, requestUrl) {
+  const origin = managedCanonicalOrigin(requestUrl)
+  const today = new Date().toISOString().slice(0, 10)
+  const safePaths = [...new Set(paths.map(normalizeManagedSitemapPath).filter(Boolean))]
+  const finalPaths = safePaths.length ? safePaths : ['/', '/pricing/', '/resources/', '/privacy/', '/terms/']
+  const urls = finalPaths
+    .map((path) => {
+      const priority = path === '/' ? '1.0' : path === '/pricing/' ? '0.9' : path === '/privacy/' || path === '/terms/' ? '0.3' : '0.78'
+      const changefreq = path === '/' || path === '/pricing/' ? 'weekly' : 'monthly'
+      return `  <url><loc>${escapeXml(`${origin}${path}`)}</loc><lastmod>${today}</lastmod><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`
+    })
+    .join('\n')
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>`
+}
+
+async function managedSitemapSourcePaths(request, env) {
+  if (!env?.ASSETS?.fetch) return []
+  const assetUrl = new URL(request.url)
+  assetUrl.pathname = '/sitemap.xml'
+  const response = await env.ASSETS.fetch(new Request(assetUrl.toString(), request))
+  if (response.status !== 200) return []
+
+  const body = await response.text()
+  return [...body.matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/gi)]
+    .map((match) => {
+      try {
+        return new URL(match[1].trim()).pathname
+      } catch {
+        return match[1].trim()
+      }
+    })
+}
+
+async function handleManagedSitemap(request, env, requestUrl) {
+  const headers = securityHeaders(request)
+  headers.set('Content-Type', 'application/xml; charset=utf-8')
+  headers.set('Cache-Control', 'public, max-age=3600')
+  const paths = await managedSitemapSourcePaths(request, env)
+  return new Response(buildManagedSitemapXml(paths, requestUrl), { status: 200, headers })
+}
+
+function handleManagedRobots(request, requestUrl) {
+  const headers = securityHeaders(request)
+  headers.set('Content-Type', 'text/plain; charset=utf-8')
+  headers.set('Cache-Control', 'public, max-age=3600')
+  const body = `User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /checkout
+Disallow: /checkout/
+Disallow: /checkout/done
+Disallow: /checkout/success
+Disallow: /success
+Sitemap: ${managedCanonicalOrigin(requestUrl)}/sitemap.xml
+`
+  return new Response(body, { status: 200, headers })
+}
+
+async function maybeHandleManagedPublicMetadata(request, env, requestUrl) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') return null
+  const pathname = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  if (pathname === '/sitemap.xml') return handleManagedSitemap(request, env, requestUrl)
+  if (pathname === '/robots.txt') return handleManagedRobots(request, requestUrl)
+  return null
+}
+
 async function fetchAsset(request, env) {
   if (env?.SITE_ASSETS?.fetch) {
     const requestUrl = new URL(request.url)
@@ -1042,6 +1315,9 @@ export async function handleRequest(request, env) {
     return handleSaasManagementPlatform(request, env, requestUrl)
   }
 
+  const managedCanonicalRedirect = maybeRedirectManagedCanonical(request, requestUrl)
+  if (managedCanonicalRedirect) return managedCanonicalRedirect
+
   const vercelSite = vercelSites.get(requestUrl.hostname)
   if (vercelSite) {
     if (requestUrl.hostname === 'www.multica.uk') {
@@ -1050,13 +1326,6 @@ export async function handleRequest(request, env) {
     }
 
     return handleStaticRoundSite(request, roundSiteEnv(env, '_vercel', vercelSite.project), requestUrl)
-  }
-
-  const round27 = round27Sites.get(requestUrl.hostname)
-  if (round27) {
-    const proofResponse = await handleRoundSiteProof(request, env, '_diversified', round27.project)
-    if (proofResponse) return proofResponse
-    return round27.handler(request, roundSiteEnv(env, '_diversified', round27.project), requestUrl)
   }
 
   // <trendradar-diversified-site-handler-2026-05-26>
@@ -1068,44 +1337,86 @@ export async function handleRequest(request, env) {
   }
   // </trendradar-diversified-site-handler-2026-05-26>
 
+  const round27 = round27Sites.get(requestUrl.hostname)
+  if (round27) {
+    const proofResponse = await handleRoundSiteProof(request, env, '_diversified', round27.project)
+    if (proofResponse) return proofResponse
+    const siteEnv = roundSiteEnv(env, '_diversified', round27.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round27.handler(request, siteEnv, requestUrl)
+  }
+
   const round17 = round17Sites.get(requestUrl.hostname)
   if (round17) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round17', round17.project)
     if (proofResponse) return proofResponse
-    return round17.handler(request, roundSiteEnv(env, '_round17', round17.project), requestUrl)
+    const siteEnv = roundSiteEnv(env, '_round17', round17.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round17.handler(request, siteEnv, requestUrl)
   }
 
   const round18 = round18Sites.get(requestUrl.hostname)
   if (round18) {
     const proofResponse = await handleRound18Proof(request, env, round18.project)
     if (proofResponse) return proofResponse
-    return round18.handler(request, round18Env(env, round18.project), requestUrl)
+    const siteEnv = round18Env(env, round18.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round18.handler(request, siteEnv, requestUrl)
   }
 
   const round22 = round22Sites.get(requestUrl.hostname)
   if (round22) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round22', round22.project)
     if (proofResponse) return proofResponse
-    return round22.handler(request, roundSiteEnv(env, '_round22', round22.project), requestUrl)
+    const siteEnv = roundSiteEnv(env, '_round22', round22.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round22.handler(request, siteEnv, requestUrl)
   }
 
   const round23 = round23Sites.get(requestUrl.hostname)
   if (round23) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round23', round23.project)
     if (proofResponse) return proofResponse
-    return round23.handler(request, roundSiteEnv(env, '_round23', round23.project), requestUrl)
+    const siteEnv = roundSiteEnv(env, '_round23', round23.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round23.handler(request, siteEnv, requestUrl)
   }
 
   const round24 = round24Sites.get(requestUrl.hostname)
   if (round24) {
-    return round24.handler(request, roundSiteEnv(env, '_round24', round24.project), requestUrl)
+    const siteEnv = roundSiteEnv(env, '_round24', round24.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round24.handler(request, siteEnv, requestUrl)
   }
 
   const round25 = round25Sites.get(requestUrl.hostname)
   if (round25) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round25', round25.project)
     if (proofResponse) return proofResponse
-    return round25.handler(request, roundSiteEnv(env, '_round25', round25.project), requestUrl)
+    const siteEnv = roundSiteEnv(env, '_round25', round25.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round25.handler(request, siteEnv, requestUrl)
   }
 
   if (requestUrl.hostname === 'www.nangointegrationops.space') {
@@ -1119,7 +1430,12 @@ export async function handleRequest(request, env) {
   if (round26) {
     const proofResponse = await handleRoundSiteProof(request, env, '_round26', round26.project)
     if (proofResponse) return proofResponse
-    return round26.handler(request, roundSiteEnv(env, '_round26', round26.project), requestUrl)
+    const siteEnv = roundSiteEnv(env, '_round26', round26.project)
+    const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, siteEnv, requestUrl)
+    if (publicMetadataResponse) return publicMetadataResponse
+    const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
+    if (notFoundResponse) return notFoundResponse
+    return round26.handler(request, siteEnv, requestUrl)
   }
 
   if (request.method === 'OPTIONS') return handleOptions(request)

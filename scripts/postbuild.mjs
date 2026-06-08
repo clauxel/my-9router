@@ -49,8 +49,8 @@ await writeStaticPage('/', {
       offers: {
         '@type': 'AggregateOffer',
         priceCurrency: 'USD',
-        lowPrice: '14.50',
-        highPrice: '124.50',
+        lowPrice: '9',
+        highPrice: '59',
         availability: 'https://schema.org/InStock',
       },
       description: defaultDescription,
@@ -107,7 +107,7 @@ for (const page of keywordPages) {
 
 await writeStaticPage('/pricing', {
   title: '9router Space Pricing | Pro Annual AI Router Rollout',
-  description: 'Compare 9router Space Starter, Pro, and Operations plans. Pro annual is selected by default and annual billing is 50% cheaper.',
+  description: 'Compare 9router Space Starter, Pro, and Enterprise plans. Pro annual is selected by default with a 50% yearly discount and no automatic renewal.',
   robots: 'index,follow',
   canonicalPath: '/pricing',
   rootHtml: buildPricingPrerender(),
@@ -281,7 +281,10 @@ function renderHtml({ title, description, robots, canonicalPath, rootHtml, struc
   html = upsertMeta(html, 'name', 'twitter:title', title)
   html = upsertMeta(html, 'name', 'twitter:description', description)
   html = upsertCanonical(html, canonicalUrl)
-  html = html.replace('<div id="root"></div>', `<div id="root">${rootHtml}</div>`)
+  html = html.replace(
+    /<div id="root">[\s\S]*?<\/div>\s*(?=<script|<\/body>)/,
+    `<div id="root">${rootHtml}</div>\n    `,
+  )
 
   const graph =
     structuredData.length > 1
@@ -324,14 +327,63 @@ function buildHomePrerender() {
         <div>
           <p class="nr-eyebrow">9router managed rollout</p>
           <h1>Run 9router as the control plane for every AI coding tool.</h1>
-          <p class="nr-lede">Plan route fallback, token policy, Docker persistence, and Pro annual checkout without losing the product page.</p>
-          <p><a class="nr-btn nr-btn-primary" href="/pricing">Choose Pro annual</a></p>
+          <p class="nr-lede">Plan route fallback, token policy, Docker persistence, and Pro annual checkout for Codex, Cursor, Antigravity, npm, and Docker teams without losing the product page.</p>
+          <p>
+            <a class="nr-btn nr-btn-primary" href="/pricing/">Choose Pro annual</a>
+            <a class="nr-btn nr-btn-secondary" href="/9router-codex/">Plan Codex routing</a>
+          </p>
         </div>
+      </section>
+      <section class="nr-section" aria-labelledby="home-problem">
+        <p class="nr-eyebrow">Problem</p>
+        <h2 id="home-problem">AI coding teams need one routing policy instead of tool-by-tool guesswork.</h2>
+        <p>9router Space is for teams that run multiple AI coding tools and need a single operational plan for model choice, provider fallback, token limits, Docker persistence, and usage review. It keeps Codex, Cursor, Antigravity, local npm installs, and hosted endpoints on the same rollout map.</p>
+      </section>
+      <section class="nr-section" aria-labelledby="home-solution">
+        <p class="nr-eyebrow">Solution</p>
+        <h2 id="home-solution">Use 9router as a managed AI router control plane.</h2>
+        <p>The service turns routing decisions into a documented workspace: primary models, fallback models, budget controls, CLI setup, Docker deployment notes, and checkout-ready implementation support. Operators can start with <a href="/9router-install/">installation planning</a>, compare <a href="/9router-npm/">npm setup</a> with <a href="/9router-docker/">Docker setup</a>, then move to a paid plan from <a href="/pricing/">9router Space pricing</a>.</p>
+      </section>
+      <section class="nr-section" aria-labelledby="home-evidence">
+        <p class="nr-eyebrow">Evidence</p>
+        <h2 id="home-evidence">The public site exposes crawlable pages for every key route.</h2>
+        <p>Search engines and answer engines can reach dedicated pages for <a href="/9router-codex/">Codex routing</a>, <a href="/9router-cursor/">Cursor routing</a>, <a href="/9router-antigravity/">Antigravity routing</a>, <a href="/9router-ai/">AI router operations</a>, <a href="/9router-github/">GitHub workflow context</a>, pricing, legal pages, <a href="/sitemap.xml">sitemap.xml</a>, and <a href="/llms.txt">llms.txt</a>.</p>
+      </section>
+      <section class="nr-section" aria-labelledby="home-plans">
+        <p class="nr-eyebrow">Plans</p>
+        <h2 id="home-plans">Start with Pro annual when the team is already using AI coding tools.</h2>
+        <ul>
+          <li><strong>Starter annual</strong> covers one operator validating a 9router workflow.</li>
+          <li><strong>Pro annual</strong> is the default for Codex, Cursor, Antigravity, fallback policies, and team usage review.</li>
+          <li><strong>Enterprise</strong> adds secured endpoint planning, provider governance, and heavier rollout support.</li>
+        </ul>
+        <p><a class="nr-btn nr-btn-primary" href="/pricing/">Compare pricing and checkout</a></p>
+      </section>
+      <section class="nr-section" aria-labelledby="home-faq">
+        <p class="nr-eyebrow">FAQ</p>
+        <h2 id="home-faq">Common 9router Space questions</h2>
+        <article>
+          <h3>What does 9router Space do?</h3>
+          <p>9router Space plans and manages an AI routing rollout across coding tools, model providers, fallback rules, token policy, Docker persistence, and operational reporting.</p>
+        </article>
+        <article>
+          <h3>Who is it for?</h3>
+          <p>It is for developers, small teams, and operations owners who already use AI coding assistants and need a repeatable control plane instead of one-off local configuration.</p>
+        </article>
+        <article>
+          <h3>Which setup paths are documented?</h3>
+          <p>The public pages cover npm installs, Docker deployment, Codex, Cursor, Antigravity, GitHub workflow context, and broader AI router planning.</p>
+        </article>
       </section>
     </main>
     <footer class="nr-footer">
       <div class="nr-footer-inner">
         <span>9router Space</span>
+        <a href="/pricing/">Pricing</a>
+        <a href="/9router-install/">Install</a>
+        <a href="/9router-docker/">Docker</a>
+        <a href="/9router-npm/">npm</a>
+        <a href="/9router-ai/">AI router</a>
         <a href="/privacy">Privacy</a>
         <a href="/terms">Terms</a>
         <a href="mailto:support@aigeamy.com">support@aigeamy.com</a>
@@ -344,8 +396,28 @@ function buildPricingPrerender() {
     <main class="nr-main">
       <section class="nr-pricing-page-hero">
         <p class="nr-eyebrow">Pricing</p>
-        <h1>9router Space pricing starts with Pro selected and annual billing already on.</h1>
-        <p class="nr-lede">Pro annual is the default path and annual billing is 50% cheaper than the monthly run-rate.</p>
+        <h1>9router Space pricing follows the Starter, Pro, and Enterprise path.</h1>
+        <p class="nr-lede">Starter is $9 per month. Pro annual is $14.50 per month for one year. Enterprise is $59 per month. No checkout renews automatically.</p>
+        <div class="nr-pricing-grid" aria-label="9router Space pricing plans">
+          <article>
+            <h2>Starter</h2>
+            <p><strong>$9 / month</strong></p>
+            <p>One route plan, npm or local install review, a basic provider stack, and email support.</p>
+            <p><a class="nr-btn nr-btn-secondary" href="/api/checkout?plan=starter&billing=monthly">Continue with Starter</a></p>
+          </article>
+          <article>
+            <h2>Pro annual</h2>
+            <p><strong>$14.50 / month</strong></p>
+            <p>$174 due today for one year. Includes Docker review, fallback policy, provider controls, and priority onboarding.</p>
+            <p><a class="nr-btn nr-btn-primary" href="/api/checkout?plan=pro&billing=annual">Continue with Pro</a></p>
+          </article>
+          <article>
+            <h2>Enterprise</h2>
+            <p><strong>$59 / month</strong></p>
+            <p>Secured endpoint planning, provider governance, custom deployment review, SLA support, and dedicated rollout help.</p>
+            <p><a class="nr-btn nr-btn-secondary" href="/api/checkout?plan=ops&billing=monthly">Continue with Enterprise</a></p>
+          </article>
+        </div>
       </section>
     </main>`
 }
@@ -564,6 +636,9 @@ async function syncRoundSites() {
   )
 
   const vercelStaticProjects = [
+    { project: 'aireasoningbase', sourceDir: path.join(workspaceRoot, 'aireasoningbase.com', 'dist') },
+    { project: 'ccswitch', sourceDir: path.join(workspaceRoot, 'cc-switch', 'dist') },
+    { project: 'clauxel', sourceDir: path.join(workspaceRoot, 'clauxel', 'dist') },
     { project: 'multica', sourceDir: path.join(workspaceRoot, 'multica', 'dist') },
   ]
 
@@ -670,6 +745,7 @@ async function syncRoundSites() {
     { project: 'notebooksourceqa', sourceDir: path.join(workspaceRoot, 'notebooksourceqa') },
     { project: 'novamirawpops', sourceDir: path.join(workspaceRoot, 'novamirawpops') },
     { project: 'openagentwatch', sourceDir: path.join(workspaceRoot, 'openagentwatch') },
+    { project: 'open-llm-vtuber', sourceDir: path.join(workspaceRoot, 'open-llm-vtuber', 'public') },
     { project: 'opendesignguard', sourceDir: path.join(workspaceRoot, 'opendesignguard') },
     { project: 'openlitops', sourceDir: path.join(workspaceRoot, 'openlitops') },
     { project: 'paperclipcompany', sourceDir: path.join(workspaceRoot, 'paperclipcompany') },
