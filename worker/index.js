@@ -320,6 +320,18 @@ const quickLaunchSites = new Map([
   }],
 ])
 
+const saasManagerPaymentConfig = {
+  name: 'SaaS Manager',
+  product: 'website operations report center',
+  h1: 'Run website patrol, launch checks, and conversion follow-up from one report center.',
+  description: 'SaaS Manager helps operators review website health, search visibility, issue ledgers, launch evidence, and checkout readiness across a portfolio.',
+  defaultPlan: 'team',
+  primaryAction: 'Checkout Portfolio monthly',
+  monthly: [19, 49, 99],
+  useCases: ['Website patrol review', 'Search visibility audit follow-up', 'Conversion and checkout evidence'],
+  facts: ['Built for portfolio operators', 'Connects reports, ledgers, launch checks, and payment readiness', 'Hosted checkout and support path are visible before purchase'],
+}
+
 for (const [host, config] of [...quickLaunchSites]) {
   quickLaunchSites.set(`www.${host}`, config)
 }
@@ -1685,6 +1697,9 @@ async function fetchAsset(request, env) {
 export async function handleRequest(request, env) {
   const requestUrl = new URL(request.url)
   if (requestUrl.hostname === 'saas-manager.clauxel.com') {
+    if (requestUrl.pathname === '/api/runtime' || requestUrl.pathname === '/api/checkout') {
+      return handleQuickLaunchSite(request, env, requestUrl, saasManagerPaymentConfig)
+    }
     if ((request.method === 'GET' || request.method === 'HEAD') && !isKnownSaasManagerPublicPath(requestUrl.pathname)) {
       return noIndexNotFoundResponse(request)
     }
