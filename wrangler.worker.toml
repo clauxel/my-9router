@@ -221,6 +221,8 @@ routes = [
   { pattern = "www.paperclipops.space/*", zone_name = "paperclipops.space" },
   { pattern = "skillsmarketwatch.space/*", zone_name = "skillsmarketwatch.space" },
   { pattern = "www.skillsmarketwatch.space/*", zone_name = "skillsmarketwatch.space" },
+  { pattern = "agentrosterdesk.space/api/*", zone_name = "agentrosterdesk.space" },
+  { pattern = "www.agentrosterdesk.space/api/*", zone_name = "agentrosterdesk.space" },
 ]
 
 [vars]

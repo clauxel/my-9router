@@ -263,6 +263,17 @@ const round27Sites = new Map([
 ])
 
 const quickLaunchSites = new Map([
+  ['agentrosterdesk.space', {
+    name: 'Agent Roster Desk',
+    product: 'AI agent roster tracker',
+    h1: 'Track active AI agents, owners, reviews, and launch evidence.',
+    description: 'Agent Roster Desk helps teams keep a review-ready roster of AI agents with owners, lifecycle state, data tier, review cadence, and audit notes.',
+    defaultPlan: 'team',
+    primaryAction: 'Checkout Team annual',
+    monthly: [49, 149, 399],
+    useCases: ['AI agent inventory', 'Ownership and review tracking', 'Audit-ready roster exports'],
+    facts: ['Built for AI operations and governance teams', 'Tracks ownership, data tier, review dates, and lifecycle state', 'Hosted checkout and support path are visible before purchase'],
+  }],
   ['llminvoiceguard.space', {
     name: 'LLM Invoice Guard',
     product: 'invoice review workspace',
