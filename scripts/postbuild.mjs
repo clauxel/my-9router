@@ -829,6 +829,7 @@ async function syncRoundSites() {
       'functions',
       'worker',
       'node_modules',
+      'saas-management-platform',
       'package.json',
       'package-lock.json',
       'README.md',
