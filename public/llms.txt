@@ -1,21 +1,23 @@
-# 9router Space
+# 9Router
 
-Plan a managed 9router rollout for Codex, Cursor, Antigravity, Docker, npm installs, fallback models, token savings, and AI routing operations.
-
-Website: https://9router.space/
-Pricing: https://9router.space/pricing/
-Checkout: https://9router.space/checkout/
+Updated: 2026-06-12
+Canonical: https://9router.space/
 Support: support@aigeamy.com
-Type: Hosted SaaS workflow product
 
-Problem:
-- Teams need a quotable product definition, pricing path, evidence trail, and checkout route.
+## Summary
+9Router is a LLM router and model gateway for teams routing prompts across model providers, fallback paths, and agent workflows. It helps users get a model routing decision page with LLM router examples, pricing, and operational safety notes.
 
-Solution:
-- 9router Space provides a hosted workflow with public pricing, structured evidence, support contact, and report or receipt outputs.
-
-Useful pages:
+## Core pages
 - Home: https://9router.space/
 - Pricing: https://9router.space/pricing/
-- Resources: https://9router.space/resources/
-- Sitemap: https://9router.space/sitemap.xml
+- Checkout fallback: https://9router.space/checkout/
+- Privacy: https://9router.space/privacy/
+- Terms: https://9router.space/terms/
+
+## Traffic intent pages
+- LLM router: https://9router.space/llm-router/ - LLM Router Guide for 9Router
+
+## Pricing anchors
+- Starter: $19/mo public planning anchor
+- Team: $69/mo public planning anchor
+- Scale: $199/mo public planning anchor
