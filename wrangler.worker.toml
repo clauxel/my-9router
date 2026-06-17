@@ -3,8 +3,6 @@ main = "worker/index.js"
 compatibility_date = "2026-05-08"
 workers_dev = true
 routes = [
-  { pattern = "9router.space/*", zone_name = "9router.space" },
-  { pattern = "www.9router.space/*", zone_name = "9router.space" },
   { pattern = "saas-manager.clauxel.com/*", zone_name = "clauxel.com" },
   { pattern = "aireasoningbase.com/*", zone_name = "aireasoningbase.com" },
   { pattern = "www.aireasoningbase.com/*", zone_name = "aireasoningbase.com" },

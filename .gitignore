@@ -11,6 +11,7 @@
 !index.html
 !wrangler.toml
 !wrangler.worker.toml
+!wrangler.9router.toml
 !vite.config.ts
 !tsconfig.json
 !tsconfig.app.json
@@ -45,6 +46,7 @@
 # Cloudflare Worker.
 !worker/
 !worker/index.js
+!worker/standalone.js
 
 # Generated and private files.
 node_modules/
