@@ -160,6 +160,27 @@ const workflowCards = [
   },
 ]
 
+const rolloutDeliverables = [
+  {
+    title: 'Team router configuration pack',
+    body:
+      'A purchased rollout starts with a provider matrix, model fallback order, CLI endpoint notes, and a short route policy your team can review before copying anything into daily tools.',
+    icon: <PackageCheck size={21} />,
+  },
+  {
+    title: 'Credential and logging boundary',
+    body:
+      'The handoff calls out which secrets stay out of the website, where dashboard auth belongs, what should be logged, and when a local Docker path is safer than a public endpoint.',
+    icon: <ShieldCheck size={21} />,
+  },
+  {
+    title: 'Adoption receipt for seats',
+    body:
+      'For team seats, the output is a practical receipt: selected tools, owner, test prompt, fallback behavior, budget guardrail, rollback note, and the next review date.',
+    icon: <Clipboard size={21} />,
+  },
+]
+
 const trustLinks = [
   {
     label: '9router GitHub',
@@ -912,9 +933,9 @@ export default function App() {
         <section className="nr-hero">
           <div className="nr-hero-copy">
             <p className="nr-eyebrow">9router managed rollout</p>
-            <h1>Run 9router as the control plane for every AI coding tool.</h1>
+            <h1>Run 9router as the AI router for Codex, Cursor, and model fallback.</h1>
             <p className="nr-lede">
-              9router Space helps teams turn the open-source 9router gateway into a reliable route plan for Codex, Cursor, Antigravity, Claude Code, Docker, npm installs, fallback models, and token savings.
+              9router Space helps teams turn the open-source 9router gateway into a reliable AI router plan for Codex, Cursor, Antigravity, Claude Code, Docker, npm installs, provider fallback, quota control, and token savings.
             </p>
 
             <div className="nr-hero-actions">
@@ -1037,6 +1058,51 @@ export default function App() {
                 <div className="nr-card-icon">{card.icon}</div>
                 <h3>{card.title}</h3>
                 <p>{card.body}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="nr-section">
+          <div className="nr-section-head">
+            <p className="nr-eyebrow">Search intent</p>
+            <h2>Answer the high-intent AI-router questions before asking for checkout.</h2>
+            <p>Buyers should understand the route, fallback, token, persistence, and security decision before they compare Starter, Pro, or Enterprise.</p>
+          </div>
+          <div className="nr-card-grid">
+            <article className="nr-card">
+              <div className="nr-card-icon"><Zap size={20} /></div>
+              <h3>Provider fallback</h3>
+              <p>Show how premium, cheap, and continuity routes behave when quota, latency, or availability changes during a coding session.</p>
+            </article>
+            <article className="nr-card">
+              <div className="nr-card-icon"><FileText size={20} /></div>
+              <h3>Token savings</h3>
+              <p>Explain why diffs, logs, grep output, and tool results need a token policy before a team routes daily work through one endpoint.</p>
+            </article>
+            <article className="nr-card">
+              <div className="nr-card-icon"><ShieldCheck size={20} /></div>
+              <h3>Operational guardrails</h3>
+              <p>Keep dashboard auth, API keys, request logs, Docker persistence, and cloud exposure visible as buying criteria, not footnotes.</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="nr-section">
+          <div className="nr-section-head">
+            <p className="nr-eyebrow">Paid rollout package</p>
+            <h2>Turn the router decision into a configuration pack a team can actually adopt.</h2>
+            <p>
+              The purchase is not just access to a page. It is the packaged route policy, setup notes, and review
+              receipt that help a coding team use one 9router endpoint without guessing at credentials, logs, or cost.
+            </p>
+          </div>
+          <div className="nr-card-grid">
+            {rolloutDeliverables.map((item) => (
+              <article className="nr-card" key={item.title}>
+                <div className="nr-card-icon">{item.icon}</div>
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
               </article>
             ))}
           </div>

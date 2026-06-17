@@ -1358,6 +1358,7 @@ function handleRobots(request) {
   const body = `User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /checkout/
 Disallow: /checkout/done
 Sitemap: ${LIVE_ORIGIN}/sitemap.xml
 `

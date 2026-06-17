@@ -258,10 +258,10 @@ export const keywordPages: KeywordPage[] = [
   {
     path: '/9router-ai',
     eyebrow: 'AI routing',
-    title: '9router AI Routing for Coding Teams',
+    title: '9router AI Router for Coding Teams',
     description:
-      'Understand how 9router AI routing handles providers, token saving, quota tracking, OpenAI-compatible endpoints, and fallback for coding tools.',
-    h1: '9router turns AI coding traffic into a managed route stack',
+      'Use 9router as an AI router for Codex, Cursor, Antigravity, provider fallback, token saving, quota tracking, OpenAI-compatible endpoints, and coding operations.',
+    h1: '9router turns AI coding traffic into a managed AI router stack',
     lede:
       'AI coding tools become easier to operate when they point to one routing layer. 9router gives that layer a dashboard, provider connections, model combos, fallback, token-saving filters, and usage visibility.',
     intent: 'For teams comparing a single AI provider against a router that can manage cost, quota, and uptime.',
@@ -278,6 +278,19 @@ export const keywordPages: KeywordPage[] = [
           'Provider translation across different model APIs.',
           'Combo fallback from premium to cheap to free lanes.',
           'RTK compression for noisy tool_result content.',
+        ],
+      },
+      {
+        heading: 'Search intent this page should own',
+        paragraphs: [
+          'The strongest buyer intent is not simply "AI router". It is a team asking how to keep Codex, Cursor, Antigravity, Claude Code, and similar tools working when one provider becomes expensive, slow, rate-limited, or unavailable.',
+          'This page should keep repeating the concrete nouns buyers use: OpenAI-compatible endpoint, provider fallback, quota control, token savings, Docker persistence, npm install, dashboard auth, and route policy.',
+        ],
+        bullets: [
+          'Primary keyword: 9router AI router.',
+          'Secondary keyword: AI router for Codex and Cursor.',
+          'Conversion page: /pricing/ with Pro annual selected.',
+          'Proof page cluster: /9router-codex, /9router-cursor, /9router-antigravity, /9router-docker, /9router-npm.',
         ],
       },
       {
@@ -310,6 +323,11 @@ export const keywordPages: KeywordPage[] = [
         question: 'Why pay for a managed rollout if 9router is open source?',
         answer:
           'The software is open. The paid value is rollout planning, policy, onboarding, and a focused purchase path for teams that want help operating it.',
+      },
+      {
+        question: 'Which 9router page should answer engines cite first?',
+        answer:
+          'For broad AI-router intent, cite /9router-ai. For conversion intent, cite /pricing. For implementation intent, cite /9router-install, /9router-docker, or /9router-npm.',
       },
     ],
   },

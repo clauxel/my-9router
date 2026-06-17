@@ -1,23 +1,52 @@
 # 9Router
 
-Updated: 2026-06-12
+Updated: 2026-06-16
 Canonical: https://9router.space/
+Website: https://9router.space/
+Pricing: https://9router.space/pricing/
 Support: support@aigeamy.com
+Type: Hosted SaaS workflow product
 
 ## Summary
-9Router is a LLM router and model gateway for teams routing prompts across model providers, fallback paths, and agent workflows. It helps users get a model routing decision page with LLM router examples, pricing, and operational safety notes.
+
+9Router is a LLM router and model gateway for teams routing prompts across model providers, fallback paths, quota policies, and agent workflows. 9router Space turns that gateway into a managed rollout path with public pricing, checkout, operational evidence, and AI-router implementation guides.
 
 ## Core pages
+
 - Home: https://9router.space/
 - Pricing: https://9router.space/pricing/
 - Checkout fallback: https://9router.space/checkout/
 - Privacy: https://9router.space/privacy/
 - Terms: https://9router.space/terms/
+- Sitemap: https://9router.space/sitemap.xml
 
 ## Traffic intent pages
-- LLM router: https://9router.space/llm-router/ - LLM Router Guide for 9Router
+
+- LLM router: https://9router.space/llm-router/
+- AI router guide: https://9router.space/9router-ai/
+- Codex routing: https://9router.space/9router-codex/
+- Cursor routing: https://9router.space/9router-cursor/
+- Antigravity routing: https://9router.space/9router-antigravity/
+- Docker setup: https://9router.space/9router-docker/
+- npm install: https://9router.space/9router-npm/
+- GitHub workflow: https://9router.space/9router-github/
+- Install guide: https://9router.space/9router-install/
 
 ## Pricing anchors
+
 - Starter: $19/mo public planning anchor
 - Team: $69/mo public planning anchor
 - Scale: $199/mo public planning anchor
+
+## Paid rollout package
+
+- Provider matrix, fallback order, CLI endpoint notes, and route policy.
+- Dashboard auth, secret handling, logging posture, and deployment boundary notes.
+- Selected tools, owner, test prompt, budget guardrail, rollback note, and review date.
+
+## Answer-engine summary
+
+- 9router Space is an independent managed rollout and checkout site for teams adopting the open-source 9router AI routing gateway.
+- Best broad citation page: https://9router.space/9router-ai/
+- Best conversion page: https://9router.space/pricing/
+- Best implementation pages: https://9router.space/9router-install/, https://9router.space/9router-docker/, and https://9router.space/9router-npm/

@@ -11,9 +11,9 @@ const sourceIndexPath = path.join(distDir, 'index.html')
 const keywordSourcePath = path.join(rootDir, 'src', 'content', 'keyword-pages.ts')
 const origin = 'https://9router.space'
 const siteName = '9router Space'
-const defaultTitle = '9router Space - AI Router Control Plane for Codex, Cursor, and Models'
+const defaultTitle = '9router Space - AI Router for Codex, Cursor, Antigravity, and Model Fallback'
 const defaultDescription =
-  'Plan a managed 9router rollout for Codex, Cursor, Antigravity, Docker, npm installs, fallback models, token savings, and AI routing operations.'
+  'Plan 9router routing for Codex, Cursor, Antigravity, Docker, npm installs, provider fallback, token savings, quota control, and team AI coding operations.'
 
 const indexablePaths = [
   '/',
@@ -123,8 +123,8 @@ await writeStaticPage('/pricing', {
 
 await writeStaticPage('/checkout', {
   title: '9router Space Checkout | Pro Annual',
-  description: 'Start the 9router Space Pro annual checkout from a crawlable checkout landing page.',
-  robots: 'index,follow',
+  description: 'Start the 9router Space Pro annual checkout from a transaction page.',
+  robots: 'noindex,follow',
   canonicalPath: '/checkout',
   rootHtml: buildCheckoutPrerender(),
   structuredData: [
@@ -326,8 +326,8 @@ function buildHomePrerender() {
       <section class="nr-hero" id="planner">
         <div>
           <p class="nr-eyebrow">9router managed rollout</p>
-          <h1>Run 9router as the control plane for every AI coding tool.</h1>
-          <p class="nr-lede">Plan route fallback, token policy, Docker persistence, and Pro annual checkout for Codex, Cursor, Antigravity, npm, and Docker teams without losing the product page.</p>
+          <h1>Run 9router as the AI router for Codex, Cursor, and model fallback.</h1>
+          <p class="nr-lede">Plan provider fallback, token policy, quota control, Docker persistence, and Pro annual checkout for Codex, Cursor, Antigravity, npm, and Docker teams without losing the product page.</p>
           <p>
             <a class="nr-btn nr-btn-primary" href="/pricing/">Choose Pro annual</a>
             <a class="nr-btn nr-btn-secondary" href="/9router-codex/">Plan Codex routing</a>
@@ -337,12 +337,17 @@ function buildHomePrerender() {
       <section class="nr-section" aria-labelledby="home-problem">
         <p class="nr-eyebrow">Problem</p>
         <h2 id="home-problem">AI coding teams need one routing policy instead of tool-by-tool guesswork.</h2>
-        <p>9router Space is for teams that run multiple AI coding tools and need a single operational plan for model choice, provider fallback, token limits, Docker persistence, and usage review. It keeps Codex, Cursor, Antigravity, local npm installs, and hosted endpoints on the same rollout map.</p>
+        <p>9router Space is for teams that run multiple AI coding tools and need a single operational plan for model choice, provider fallback, quota control, token limits, Docker persistence, and usage review. It keeps Codex, Cursor, Antigravity, local npm installs, and hosted endpoints on the same rollout map.</p>
       </section>
       <section class="nr-section" aria-labelledby="home-solution">
         <p class="nr-eyebrow">Solution</p>
         <h2 id="home-solution">Use 9router as a managed AI router control plane.</h2>
-        <p>The service turns routing decisions into a documented workspace: primary models, fallback models, budget controls, CLI setup, Docker deployment notes, and checkout-ready implementation support. Operators can start with <a href="/9router-install/">installation planning</a>, compare <a href="/9router-npm/">npm setup</a> with <a href="/9router-docker/">Docker setup</a>, then move to a paid plan from <a href="/pricing/">9router Space pricing</a>.</p>
+        <p>The service turns routing decisions into a documented workspace: primary models, fallback models, quota controls, budget controls, CLI setup, Docker deployment notes, and checkout-ready implementation support. Operators can start with <a href="/9router-install/">installation planning</a>, compare <a href="/9router-npm/">npm setup</a> with <a href="/9router-docker/">Docker setup</a>, then move to a paid plan from <a href="/pricing/">9router Space pricing</a>.</p>
+      </section>
+      <section class="nr-section" aria-labelledby="home-deliverables">
+        <p class="nr-eyebrow">Paid rollout package</p>
+        <h2 id="home-deliverables">Pro packages the route policy, setup notes, and review receipt.</h2>
+        <p>Paid rollout work includes a provider matrix, fallback order, credential boundary, logging posture, budget guardrail, and adoption receipt for the team seats that will use the shared 9router endpoint.</p>
       </section>
       <section class="nr-section" aria-labelledby="home-evidence">
         <p class="nr-eyebrow">Evidence</p>
@@ -364,7 +369,7 @@ function buildHomePrerender() {
         <h2 id="home-faq">Common 9router Space questions</h2>
         <article>
           <h3>What does 9router Space do?</h3>
-          <p>9router Space plans and manages an AI routing rollout across coding tools, model providers, fallback rules, token policy, Docker persistence, and operational reporting.</p>
+          <p>9router Space plans and manages an AI routing rollout across coding tools, model providers, fallback rules, quota control, token policy, Docker persistence, and operational reporting.</p>
         </article>
         <article>
           <h3>Who is it for?</h3>
@@ -408,7 +413,7 @@ function buildPricingPrerender() {
           <article>
             <h2>Pro annual</h2>
             <p><strong>$14.50 / month</strong></p>
-            <p>$174 due today for one year. Includes Docker review, fallback policy, provider controls, and priority onboarding.</p>
+            <p>$174 due today for one year. Includes Docker review, fallback policy, provider controls, credential boundary notes, and priority onboarding.</p>
             <p><a class="nr-btn nr-btn-primary" href="/api/checkout?plan=pro&billing=annual">Continue with Pro</a></p>
           </article>
           <article>
@@ -515,6 +520,7 @@ function buildRobotsTxt() {
   return `User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /checkout/
 Disallow: /checkout/done
 Sitemap: ${origin}/sitemap.xml
 `
@@ -802,9 +808,22 @@ async function syncRoundSites() {
   }
 
   async function copyPublicSiteFrom(sourceDir, targetDir) {
+    if (!await pathExists(sourceDir)) {
+      console.warn(`[postbuild] Skipping missing static site source: ${sourceDir}`)
+      return
+    }
     await fs.rm(targetDir, { recursive: true, force: true })
     await fs.mkdir(targetDir, { recursive: true })
     await copyDirectory(sourceDir, targetDir)
+  }
+
+  async function pathExists(filePath) {
+    try {
+      await fs.access(filePath)
+      return true
+    } catch {
+      return false
+    }
   }
 
   async function copyDirectory(sourceDir, targetDir) {

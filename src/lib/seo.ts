@@ -3,9 +3,9 @@ import type { RouteView } from './routing'
 
 const liveOrigin = 'https://9router.space'
 const siteName = '9router Space'
-const defaultTitle = '9router Space - AI Router Control Plane for Codex, Cursor, and Models'
+const defaultTitle = '9router Space - AI Router for Codex, Cursor, Antigravity, and Model Fallback'
 const defaultDescription =
-  'Plan a managed 9router rollout for Codex, Cursor, Antigravity, Docker, npm installs, fallback models, token savings, and AI routing operations.'
+  'Plan 9router routing for Codex, Cursor, Antigravity, Docker, npm installs, provider fallback, token savings, quota control, and team AI coding operations.'
 
 const canonicalLinkId = 'nine-router-canonical-link'
 const structuredDataScriptId = 'nine-router-structured-data'

@@ -5,6 +5,7 @@
 !.gitignore
 !.gitattributes
 !README.md
+!WEBSITE_CHANGELOG.md
 !package.json
 !package-lock.json
 !index.html
