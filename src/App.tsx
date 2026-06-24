@@ -221,7 +221,7 @@ const legalPrivacySections = [
   {
     title: 'Service providers',
     paragraphs: [
-      'Cloudflare supports hosting, routing, security, and analytics infrastructure. Creem supports hosted checkout and payment processing.',
+      'Cloudflare supports hosting, routing, security, and analytics infrastructure. Polar supports hosted checkout and payment processing.',
       'Payment details are handled by the payment provider. We do not ask users to send card numbers, passwords, provider API keys, OAuth tokens, or repository secrets by email or through this public planner.',
       'Third-party services process information under their own terms and privacy practices. Do not proceed with checkout or external links if you do not accept those practices.',
     ],
@@ -280,7 +280,7 @@ const legalTermsSections = [
   {
     title: 'Payments, renewals, and refunds',
     paragraphs: [
-      'Payments are processed by Creem in a hosted popup window. Successful checkouts return the user to the homepage.',
+      'Payments are processed by Polar in a hosted popup window. Successful checkouts return the user to the homepage.',
       'Displayed Pro annual pricing reflects a 50% discount versus the Pro monthly run-rate. Starter and Enterprise can also be purchased for a fixed period without automatic renewal. Prices, plan names, features, and availability may change before purchase.',
       'Unless a separate written agreement says otherwise, purchases are final to the maximum extent permitted by law. If the payment provider, consumer law, or a written policy requires a refund, that required rule controls.',
       'Chargebacks, payment abuse, or attempted circumvention of checkout may result in suspension, cancellation, or refusal of service.',
@@ -297,7 +297,7 @@ const legalTermsSections = [
   {
     title: 'Third-party services',
     paragraphs: [
-      'Cloudflare, Creem, GitHub, npm, Docker, model providers, coding tools, infrastructure providers, and other third-party services may be involved in hosting, checkout, references, integrations, or customer workflows.',
+      'Cloudflare, Polar, GitHub, npm, Docker, model providers, coding tools, infrastructure providers, and other third-party services may be involved in hosting, checkout, references, integrations, or customer workflows.',
       'We are not responsible for third-party services, third-party outages, payment provider decisions, external repositories, external links, provider pricing, account bans, rate limits, or third-party terms.',
       'Your use of third-party services is governed by the applicable third-party terms, privacy policies, account rules, and fees.',
     ],
@@ -574,7 +574,7 @@ export default function App() {
     }
   }
 
-  async function startHostedCheckout(planId: PlanId, nextBilling: Billing, loadingKey: string, provider = 'creem') {
+  async function startHostedCheckout(planId: PlanId, nextBilling: Billing, loadingKey: string, provider = 'polar') {
     setSelectedPlanId(planId)
     setCheckoutLoadingKey(loadingKey)
     setCheckoutModal({ planId, billing: nextBilling, loadingKey, status: 'loading' })
@@ -583,7 +583,7 @@ export default function App() {
     const popup = openCenteredCheckoutWindow()
 
     try {
-      const url = await createCheckoutSession(planId, nextBilling, provider === 'nowpayments' ? '/api/nowpayments-checkout' : '/api/checkout')
+      const url = await createCheckoutSession(planId, nextBilling, provider === 'polar' ? '/api/polar-checkout' : '/api/checkout')
       const popupOpened = sendPopupToCheckout(popup, url)
       if (!popupOpened) {
         setCheckoutModal({ planId, billing: nextBilling, loadingKey, status: 'retry', checkoutUrl: url })
@@ -669,7 +669,7 @@ export default function App() {
           ) : checkoutUrl && checkoutModal.status === 'popup' ? (
             <div className="nr-checkout-copy">
               <p className="nr-eyebrow">Secure checkout</p>
-              <h2 id="checkout-title">Creem checkout opened.</h2>
+              <h2 id="checkout-title">Polar checkout opened.</h2>
               <p>Complete payment in the centered popup. This page stays in place and returns to the homepage after success.</p>
               <div className="nr-checkout-actions">
                 <a className="nr-btn nr-btn-primary" href={checkoutUrl} target="_blank" rel="noreferrer noopener">
@@ -887,7 +887,7 @@ export default function App() {
                 <button
                   type="button"
                   className="nr-btn nr-btn-ghost"
-                  onClick={() => void startHostedCheckout(plan.id, billing, `${loadingKey}-wallet`, 'nowpayments')}
+                  onClick={() => void startHostedCheckout(plan.id, billing, `${loadingKey}-wallet`, 'polar')}
                   disabled={checkoutLoadingKey !== null}
                 >
                   {checkoutLoadingKey === `${loadingKey}-wallet` ? 'Opening USDC wallet...' : 'Pay with USDC Wallet'}
@@ -911,7 +911,7 @@ export default function App() {
           </article>
           <article>
             <h3>Does payment replace this page?</h3>
-            <p>No. Checkout opens in a centered Creem popup and the product page stays visible behind a blurred overlay.</p>
+            <p>No. Checkout opens in a centered Polar popup and the product page stays visible behind a blurred overlay.</p>
           </article>
         </div>
       ) : null}
@@ -992,7 +992,7 @@ export default function App() {
             <div className="nr-hero-proof">
               <div>
                 <span>Default path</span>
-                <strong>Route planner to Pro annual to Creem popup to homepage return</strong>
+                <strong>Route planner to Pro annual to Polar popup to homepage return</strong>
               </div>
               <div>
                 <span>Best-fit work</span>
@@ -1201,7 +1201,7 @@ export default function App() {
           <div>
             <p className="nr-eyebrow">Recommended next step</p>
             <h2>Use the route planner, then keep Pro annual selected if the setup fits.</h2>
-            <p>Checkout stays in a centered Creem popup, with Pro annual selected by default.</p>
+            <p>Checkout stays in a centered Polar popup, with Pro annual selected by default.</p>
           </div>
           <div className="nr-article-cta-actions">
             <button type="button" className="nr-btn nr-btn-primary" onClick={() => chooseProAnnual(`article-${page.path}`)}>

@@ -1,5 +1,5 @@
 import { handleAnalyticsRequest } from './analytics.js'
-import { handleNowPaymentsCheckout } from './nowpayments.js'
+import { handlePolarCheckout } from './polar.js'
 import { handleRequest as handleRound17Claudecodereplacement } from './round17/claudecodereplacement/index.js'
 import { handleRequest as handleRound17Geminiomniapproval } from './round17/geminiomniapproval/index.js'
 import { handleRequest as handleRound17A2areplayreceipt } from './round17/a2areplayreceipt/index.js'
@@ -370,16 +370,16 @@ async function maybeHandleCookieFreeAnalyticsApi(request, env, requestUrl) {
   if (request.method === 'OPTIONS' && pathname.startsWith('/api/')) return handleOptions(request)
 
   if (pathname === '/api/runtime') {
-    const apiKey = await firstSecretEnv(env, 'NOWPAYMENTS_API_KEY', 'NOWPAYMENTS_KEY')
+    const apiKey = await firstSecretEnv(env, 'POLAR_API_KEY', 'POLAR_KEY')
     return jsonResponse({
       ok: true,
       siteKey: 'cookiefreeanalytics',
       product: 'CookieFree Analytics',
       publicAppOrigin: cookieFreeAnalyticsOrigin(requestUrl),
       deployment: 'cloudflare-workers-assets',
-      paymentProvider: 'nowpayments',
-      nowpaymentsConfigured: Boolean(apiKey),
-      payCurrency: String(env?.NOWPAYMENTS_PAY_CURRENCY || 'USDCMATIC').trim().toUpperCase(),
+      paymentProvider: 'polar',
+      polarConfigured: Boolean(apiKey),
+      payCurrency: String(env?.POLAR_PAY_CURRENCY || 'USD').trim().toUpperCase(),
       defaultPlan: 'growth',
       defaultBilling: 'annual',
       annualDiscount: '50%',
@@ -388,8 +388,8 @@ async function maybeHandleCookieFreeAnalyticsApi(request, env, requestUrl) {
     }, 200, request)
   }
 
-  if (pathname === '/api/checkout' || pathname === '/api/nowpayments-checkout') {
-    return handleNowPaymentsCheckout(request, env, {
+  if (pathname === '/api/checkout' || pathname === '/api/polar-checkout') {
+    return handlePolarCheckout(request, env, {
       plans: cookieFreeAnalyticsPlans,
       defaultPlanId: 'growth',
       defaultBilling: 'annual',
@@ -608,7 +608,7 @@ const diversifiedStaticSites = new Map([
 ])
 // </trendradar-diversified-site-map-2026-05-26>
 
-const creemProductCache = new Map()
+const polarProductCache = new Map()
 
 const planCatalog = {
   starter: {
@@ -888,9 +888,9 @@ async function handleStaticRoundSite(request, env, requestUrl) {
   const pathname = requestUrl.pathname.replace(/\/+$/, '') || '/'
   if (request.method === 'OPTIONS' && pathname.startsWith('/api/')) return handleOptions(request)
   if (pathname === '/api/runtime') return handleManagedRuntime(request, env, requestUrl)
-  if (pathname === '/api/checkout') return handleManagedNowPaymentsCheckout(request, env, requestUrl)
-  if (pathname === '/api/nowpayments-checkout') {
-    return handleManagedNowPaymentsCheckout(request, env, requestUrl)
+  if (pathname === '/api/checkout') return handleManagedPolarCheckout(request, env, requestUrl)
+  if (pathname === '/api/polar-checkout') {
+    return handleManagedPolarCheckout(request, env, requestUrl)
   }
   const publicMetadataResponse = await maybeHandleManagedPublicMetadata(request, env, requestUrl)
   if (publicMetadataResponse) return publicMetadataResponse
@@ -1077,8 +1077,8 @@ function isKnownSaasManagerPublicPath(pathname) {
   return false
 }
 
-function handleManagedNowPaymentsCheckout(request, env, requestUrl) {
-  return handleNowPaymentsCheckout(request, env, {
+function handleManagedPolarCheckout(request, env, requestUrl) {
+  return handlePolarCheckout(request, env, {
     plans: planCatalog,
     defaultPlanId: 'pro',
     defaultBilling: 'annual',
@@ -1092,15 +1092,15 @@ function handleManagedNowPaymentsCheckout(request, env, requestUrl) {
 }
 
 async function handleManagedRuntime(request, env, requestUrl) {
-  const apiKey = await firstSecretEnv(env, 'NOWPAYMENTS_API_KEY', 'NOWPAYMENTS_KEY')
+  const apiKey = await firstSecretEnv(env, 'POLAR_API_KEY', 'POLAR_KEY')
   return jsonResponse(
     {
       ok: true,
       publicAppOrigin: resolvePublicAppOrigin(requestUrl),
       deployment: 'cloudflare-workers-assets',
-      paymentProvider: 'nowpayments',
-      nowpaymentsConfigured: Boolean(apiKey),
-      payCurrency: String(env?.NOWPAYMENTS_PAY_CURRENCY || 'USDCMATIC').trim().toUpperCase(),
+      paymentProvider: 'polar',
+      polarConfigured: Boolean(apiKey),
+      payCurrency: String(env?.POLAR_PAY_CURRENCY || 'USD').trim().toUpperCase(),
       defaultPlan: 'pro',
       defaultBilling: 'annual',
       annualDiscount: '50%',
@@ -1111,9 +1111,9 @@ async function handleManagedRuntime(request, env, requestUrl) {
   )
 }
 
-function resolveCreemBase(env) {
-  const raw = String(env?.CREEM_API_BASE ?? '').trim()
-  return raw ? raw.replace(/\/+$/, '') : 'https://api.creem.io'
+function resolvePolarBase(env) {
+  const raw = String(env?.POLAR_API_BASE ?? '').trim()
+  return raw ? raw.replace(/\/+$/, '') : 'https://api.polar.sh'
 }
 
 async function getSecretValue(value) {
@@ -1156,15 +1156,15 @@ function resolveConfiguredProductId(env, planId, billing) {
   const normalizedSelection = normalizeEnvKey(`${planId}_${billing}`)
   const alternateSelection = planId === 'ops' ? normalizeEnvKey(`enterprise_${billing}`) : normalizedSelection
   const keys = [
-    `CREEM_PRODUCT_${alternateTier}_${cycle}`,
-    `CREEM_PRODUCT_${tier}_${cycle}`,
-    `CREEM_PRODUCT_ID_9ROUTER_${alternateSelection}`,
-    `CREEM_PRODUCT_ID_9ROUTER_${normalizedSelection}`,
-    `CREEM_PRODUCT_ID_${alternateSelection}`,
-    `CREEM_PRODUCT_ID_${normalizedSelection}`,
-    `CREEM_PRODUCT_ID_${alternateTier}`,
-    `CREEM_PRODUCT_ID_${tier}`,
-    'CREEM_PRODUCT_ID',
+    `POLAR_PRODUCT_${alternateTier}_${cycle}`,
+    `POLAR_PRODUCT_${tier}_${cycle}`,
+    `POLAR_PRODUCT_ID_9ROUTER_${alternateSelection}`,
+    `POLAR_PRODUCT_ID_9ROUTER_${normalizedSelection}`,
+    `POLAR_PRODUCT_ID_${alternateSelection}`,
+    `POLAR_PRODUCT_ID_${normalizedSelection}`,
+    `POLAR_PRODUCT_ID_${alternateTier}`,
+    `POLAR_PRODUCT_ID_${tier}`,
+    'POLAR_PRODUCT_ID',
   ]
 
   for (const key of keys) {
@@ -1174,7 +1174,7 @@ function resolveConfiguredProductId(env, planId, billing) {
   return ''
 }
 
-async function requestCreemJson(apiKey, url, body) {
+async function requestPolarJson(apiKey, url, body) {
   const response = await fetch(url, {
     method: 'POST',
     headers: {
@@ -1197,20 +1197,20 @@ async function requestCreemJson(apiKey, url, body) {
   if (!response.ok) {
     throw new Error(
       payload && typeof payload === 'object'
-        ? payload.message || payload.error || 'Creem request failed.'
-        : 'Creem request failed.',
+        ? payload.message || payload.error || 'Polar request failed.'
+        : 'Polar request failed.',
     )
   }
 
   return payload || {}
 }
 
-async function getOrCreateCreemProduct(env, apiKey, plan, billing, successUrl) {
+async function getOrCreatePolarProduct(env, apiKey, plan, billing, successUrl) {
   const configuredProductId = resolveConfiguredProductId(env, plan.id, billing)
   if (configuredProductId) return configuredProductId
 
   const cacheKey = `${plan.id}:${billing}`
-  if (creemProductCache.has(cacheKey)) return creemProductCache.get(cacheKey)
+  if (polarProductCache.has(cacheKey)) return polarProductCache.get(cacheKey)
 
   const annualMultiplier = Number(plan.annualDiscountMultiplier ?? ANNUAL_DISCOUNT_MULTIPLIER)
   const safeAnnualMultiplier = Number.isFinite(annualMultiplier) && annualMultiplier > 0 ? annualMultiplier : 1
@@ -1219,7 +1219,7 @@ async function getOrCreateCreemProduct(env, apiKey, plan, billing, successUrl) {
   const totalAmountCents = billing === 'annual' ? monthlyAmountCents * 12 : monthlyAmountCents
   const billingLabel = billing === 'annual' ? 'annual' : 'monthly'
 
-  const product = await requestCreemJson(apiKey, `${resolveCreemBase(env)}/v1/products`, {
+  const product = await requestPolarJson(apiKey, `${resolvePolarBase(env)}/v1/products`, {
     name: `9router Space ${plan.name} (${billingLabel})`,
     description: `${formatMoney(monthlyAmountCents, plan.currency)}/mo - ${plan.summary}`,
     price: totalAmountCents,
@@ -1231,9 +1231,9 @@ async function getOrCreateCreemProduct(env, apiKey, plan, billing, successUrl) {
   })
 
   const productId = product.id || product.product_id
-  if (!productId) throw new Error('Creem did not return a product id.')
+  if (!productId) throw new Error('Polar did not return a product id.')
 
-  creemProductCache.set(cacheKey, productId)
+  polarProductCache.set(cacheKey, productId)
   return productId
 }
 
@@ -1250,9 +1250,9 @@ async function handleCheckout(request, env, requestUrl) {
     return jsonResponse({ ok: false, error: 'Method not allowed.' }, 405, request)
   }
 
-  const nowPaymentsFallbackRequest = request.clone()
-  const nowPaymentsFallback = () =>
-    handleNowPaymentsCheckout(nowPaymentsFallbackRequest, env, {
+  const polarFallbackRequest = request.clone()
+  const polarFallback = () =>
+    handlePolarCheckout(polarFallbackRequest, env, {
       plans: planCatalog,
       defaultPlanId: 'pro',
       siteName: requestUrl.hostname,
@@ -1262,9 +1262,9 @@ async function handleCheckout(request, env, requestUrl) {
         : (typeof annualBillingMultiplier !== 'undefined' ? annualBillingMultiplier : 0.5),
     })
 
-  const apiKey = await firstSecretEnv(env, 'API_PROD_KEY', 'CREEM_API_KEY', 'CREEM_KEY')
+  const apiKey = await firstSecretEnv(env, 'API_PROD_KEY', 'POLAR_API_KEY', 'POLAR_KEY')
   if (!apiKey) {
-    return nowPaymentsFallback()
+    return polarFallback()
   }
 
   let body
@@ -1281,8 +1281,8 @@ async function handleCheckout(request, env, requestUrl) {
   const successUrl = `${resolvePublicAppOrigin(requestUrl)}/checkout/done`
 
   try {
-    const productId = await getOrCreateCreemProduct(env, apiKey, plan, billing, successUrl)
-    const checkout = await requestCreemJson(apiKey, `${resolveCreemBase(env)}/v1/checkouts`, {
+    const productId = await getOrCreatePolarProduct(env, apiKey, plan, billing, successUrl)
+    const checkout = await requestPolarJson(apiKey, `${resolvePolarBase(env)}/v1/checkouts`, {
       product_id: productId,
       units: 1,
       success_url: successUrl,
@@ -1294,10 +1294,10 @@ async function handleCheckout(request, env, requestUrl) {
       },
     })
     const checkoutUrl = extractCheckoutUrl(checkout)
-    if (!checkoutUrl) throw new Error('Creem did not return a checkout URL.')
+    if (!checkoutUrl) throw new Error('Polar did not return a checkout URL.')
     return jsonResponse({ ok: true, checkoutUrl }, 200, request)
   } catch {
-    return nowPaymentsFallback()
+    return polarFallback()
   }
 }
 
@@ -1307,7 +1307,7 @@ function handleRuntime(request, requestUrl) {
       ok: true,
       publicAppOrigin: resolvePublicAppOrigin(requestUrl),
       deployment: 'cloudflare-workers-assets',
-      paymentProvider: 'creem',
+      paymentProvider: 'polar',
       defaultPlan: 'pro',
       defaultBilling: 'annual',
       annualDiscount: '50%',
@@ -1495,7 +1495,7 @@ function quickLaunchPricing(config, requestUrl) {
     title: `Pricing | ${config.name}`,
     description: `Pricing for ${config.name} ${config.product}, annual checkout, support, and team review workflows.`,
     path: '/pricing/',
-    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Pricing</p><h1>Choose the ${escapeHtml(config.name)} plan for your review rhythm.</h1><p class="lead">Annual checkout is selected by default and uses NOWPayments hosted checkout when payment credentials are available.</p><div class="grid">${plans.map((plan) => { const monthly = plan.monthlyAmountCents / 100; const annual = quickAnnualPrice(monthly); return `<article class="card"><h3>${escapeHtml(plan.name)}</h3><div class="price">$${monthly} <small>/mo</small></div><p>${escapeHtml(plan.summary)} Annual billing is $${annual} after the launch discount.</p><button class="button ${plan.featured ? 'primary' : ''}" data-checkout data-plan-id="${plan.id}">Checkout ${escapeHtml(plan.name)} annual</button></article>` }).join('')}</div></div></section></main>`,
+    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Pricing</p><h1>Choose the ${escapeHtml(config.name)} plan for your review rhythm.</h1><p class="lead">Annual checkout is selected by default and uses Polar hosted checkout when payment credentials are available.</p><div class="grid">${plans.map((plan) => { const monthly = plan.monthlyAmountCents / 100; const annual = quickAnnualPrice(monthly); return `<article class="card"><h3>${escapeHtml(plan.name)}</h3><div class="price">$${monthly} <small>/mo</small></div><p>${escapeHtml(plan.summary)} Annual billing is $${annual} after the launch discount.</p><button class="button ${plan.featured ? 'primary' : ''}" data-checkout data-plan-id="${plan.id}">Checkout ${escapeHtml(plan.name)} annual</button></article>` }).join('')}</div></div></section></main>`,
   })
 }
 
@@ -1524,7 +1524,7 @@ function quickLaunchCheckout(config, requestUrl) {
     description: `Start ${config.name} checkout through hosted payment or support fallback.`,
     path: '/checkout/',
     robots: 'noindex,follow',
-    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Checkout</p><h1>Start ${escapeHtml(config.name)} checkout.</h1><p class="lead">The Team annual plan is selected by default. The product page stays open while NOWPayments hosted checkout opens in a new tab when available.</p><div class="actions"><button class="button primary" data-checkout data-plan-id="${config.defaultPlan}">${escapeHtml(config.primaryAction)}</button><a class="button" href="/pricing/">View pricing plans</a></div><p class="notice">If hosted checkout cannot open, the support fallback lets a buyer request the correct payment link without losing the product page.</p></div></section></main>`,
+    body: `<main><section class="hero"><div class="wrap"><p class="eyebrow">Checkout</p><h1>Start ${escapeHtml(config.name)} checkout.</h1><p class="lead">The Team annual plan is selected by default. The product page stays open while Polar hosted checkout opens in a new tab when available.</p><div class="actions"><button class="button primary" data-checkout data-plan-id="${config.defaultPlan}">${escapeHtml(config.primaryAction)}</button><a class="button" href="/pricing/">View pricing plans</a></div><p class="notice">If hosted checkout cannot open, the support fallback lets a buyer request the correct payment link without losing the product page.</p></div></section></main>`,
   })
 }
 
@@ -1581,24 +1581,24 @@ async function handleQuickLaunchSite(request, env, requestUrl, config) {
 
   if (request.method === 'OPTIONS' && requestUrl.pathname.startsWith('/api/')) return handleOptions(request)
   if (requestUrl.pathname === '/api/runtime') {
-    const apiKey = await firstSecretEnv(env, 'NOWPAYMENTS_API_KEY', 'NOWPAYMENTS_KEY')
+    const apiKey = await firstSecretEnv(env, 'POLAR_API_KEY', 'POLAR_KEY')
     return jsonResponse({
       ok: true,
       siteKey: quickLaunchSiteKey(requestUrl),
       product: config.name,
       canonicalOrigin: quickLaunchOrigin(requestUrl),
       payment: {
-        provider: 'nowpayments',
+        provider: 'polar',
         configured: Boolean(apiKey),
         defaultPlan: config.defaultPlan,
         defaultBilling: 'annual',
-        payCurrency: String(env?.NOWPAYMENTS_PAY_CURRENCY || 'USDCMATIC').trim().toUpperCase(),
+        payCurrency: String(env?.POLAR_PAY_CURRENCY || 'USD').trim().toUpperCase(),
       },
       analytics: Boolean(env?.DB || env?.ANALYTICS_DB),
     }, 200, request)
   }
   if (requestUrl.pathname === '/api/checkout') {
-    return handleNowPaymentsCheckout(request, env, {
+    return handlePolarCheckout(request, env, {
       plans: quickLaunchPlans(config),
       defaultPlanId: config.defaultPlan,
       defaultBilling: 'annual',
@@ -1914,8 +1914,8 @@ export async function handleRequest(request, env) {
   }
 
   if (request.method === 'OPTIONS') return handleOptions(request)
-  if (requestUrl.pathname === '/api/nowpayments-checkout') {
-    return handleNowPaymentsCheckout(request, env, {
+  if (requestUrl.pathname === '/api/polar-checkout') {
+    return handlePolarCheckout(request, env, {
       plans: planCatalog,
       defaultPlanId: 'pro',
       siteName: '9router',

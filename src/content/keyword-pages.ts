@@ -297,7 +297,7 @@ export const keywordPages: KeywordPage[] = [
         heading: 'Cost and continuity',
         paragraphs: [
           'The value is not only lower spend. It is fewer broken coding sessions. When quota runs out, a fallback stack can keep work moving while making the tradeoff visible.',
-          'The managed site turns that into a purchase decision: pick a route, confirm the default Pro annual plan, and open Creem checkout without losing the page context.',
+          'The managed site turns that into a purchase decision: pick a route, confirm the default Pro annual plan, and open Polar checkout without losing the page context.',
         ],
       },
       {
@@ -480,7 +480,7 @@ export const keywordPages: KeywordPage[] = [
       {
         heading: 'Checkout behavior',
         paragraphs: [
-          'The pricing page keeps annual billing on and Pro selected. Creem opens in a centered popup, while the current page remains blurred in the background so the buyer keeps plan context.',
+          'The pricing page keeps annual billing on and Pro selected. Polar opens in a centered popup, while the current page remains blurred in the background so the buyer keeps plan context.',
         ],
       },
     ],

@@ -154,7 +154,7 @@ await writeStaticPage('/privacy', {
     {
       heading: 'Providers and contact',
       paragraphs: [
-        'Cloudflare supports hosting and security infrastructure. Creem supports hosted checkout and payment processing.',
+        'Cloudflare supports hosting and security infrastructure. Polar supports hosted checkout and payment processing.',
         'Privacy and support requests should be sent to support@aigeamy.com.',
       ],
     },
@@ -199,8 +199,8 @@ await writeStaticPage('/terms', {
     {
       heading: 'Payments and third-party services',
       paragraphs: [
-        'Payments are processed by Creem in a hosted popup window. Successful checkouts return the user to the homepage.',
-        'Cloudflare, Creem, GitHub, npm, Docker, model providers, infrastructure providers, and other third-party services may be involved in hosting, checkout, integrations, or workflows.',
+        'Payments are processed by Polar in a hosted popup window. Successful checkouts return the user to the homepage.',
+        'Cloudflare, Polar, GitHub, npm, Docker, model providers, infrastructure providers, and other third-party services may be involved in hosting, checkout, integrations, or workflows.',
       ],
     },
     {
