@@ -874,6 +874,8 @@ async function withManagedStaticHtmlMetadata(response, requestUrl) {
 
   body = body.replace(/<meta\s+[^>]*property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${canonicalUrl}">`)
   body = body.replace(/<meta\s+[^>]*content=["'][^"']*["'][^>]*property=["']og:url["'][^>]*>/i, `<meta property="og:url" content="${canonicalUrl}">`)
+  body = injectManagedAnalyticsSnippet(body)
+  body = injectMiroFishContextualBacklink(body, requestUrl)
 
   const headers = new Headers(response.headers)
   headers.delete('Content-Length')
@@ -882,6 +884,113 @@ async function withManagedStaticHtmlMetadata(response, requestUrl) {
     statusText: response.statusText,
     headers,
   })
+}
+
+const miroFishBacklinkExcludedHosts = new Set([
+  'mirofish.work',
+  'www.mirofish.work',
+  'mirofish.best',
+  'www.mirofish.best',
+  'mirofishguide.space',
+  'www.mirofishguide.space',
+])
+
+const miroFishBacklinkEligiblePaths = new Set([
+  '/',
+  '/resources',
+  '/resources/',
+  '/source-notes',
+  '/source-notes/',
+])
+
+function ownedBacklinkUtmSource(requestUrl) {
+  return requestUrl.hostname.replace(/^www\./, '').toLowerCase()
+}
+
+function ownedBacklinkUtmContent(requestUrl) {
+  const normalized = requestUrl.pathname.replace(/^\/+|\/+$/g, '') || 'home'
+  return normalized.replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '').toLowerCase() || 'home'
+}
+
+function miroFishBacklinkUrl(requestUrl) {
+  const params = new URLSearchParams({
+    utm_source: ownedBacklinkUtmSource(requestUrl),
+    utm_medium: 'owned_resource',
+    utm_campaign: 'portfolio_contextual_backlink',
+    utm_content: ownedBacklinkUtmContent(requestUrl),
+  })
+  return `https://mirofish.work/?${params.toString()}`
+}
+
+function injectMiroFishContextualBacklink(body, requestUrl) {
+  const hostname = requestUrl.hostname.toLowerCase()
+  if (miroFishBacklinkExcludedHosts.has(hostname)) return body
+  const normalizedPath = requestUrl.pathname.replace(/\/+$/, '') || '/'
+  if (!miroFishBacklinkEligiblePaths.has(normalizedPath) && !normalizedPath.startsWith('/resources/')) return body
+  if (/data-mirofish-contextual-backlink/i.test(body) || /https:\/\/mirofish\.work\/\?utm_source=/i.test(body)) return body
+  if (!/<\/main>/i.test(body) && !/<\/footer>/i.test(body) && !/<\/body>/i.test(body)) return body
+
+  const href = escapeHtml(miroFishBacklinkUrl(requestUrl))
+  const block = `<section class="mirofish-contextual-reference" data-mirofish-contextual-backlink aria-labelledby="mirofish-contextual-reference-heading" style="max-width:1120px;margin:28px auto;padding:16px;border:1px solid rgba(100,116,139,.28);border-radius:8px;background:rgba(255,255,255,.72);color:inherit">
+  <h2 id="mirofish-contextual-reference-heading" style="font-size:18px;line-height:1.25;margin:0 0 8px;letter-spacing:0">Related AI workflow reference</h2>
+  <p style="margin:0;color:inherit;opacity:.82">Teams that compare workflow plans with launch and market assumptions can also review <a href="${href}" target="_blank" rel="noopener">MiroFish AI Simulator</a>, a companion reference for simulation-style product reasoning.</p>
+</section>`
+
+  if (/<\/main>/i.test(body)) return body.replace(/<\/main>/i, `${block}\n</main>`)
+  if (/<\/footer>/i.test(body)) return body.replace(/<\/footer>/i, `${block}\n</footer>`)
+  return body.replace(/<\/body>/i, `${block}\n</body>`)
+}
+
+function injectManagedAnalyticsSnippet(body) {
+  if (!/<\/head>/i.test(body) || /data-managed-analytics=["']page-view["']/i.test(body)) return body
+
+  const snippet = `<script data-managed-analytics="page-view">
+(function(){
+  try {
+    var host = window.location.hostname.replace(/^www\\./, "");
+    var visitorKey = "managed-analytics-visitor:" + host;
+    var sessionKey = "managed-analytics-session:" + host;
+    var now = Date.now();
+    var visitorId = localStorage.getItem(visitorKey);
+    if (!visitorId) {
+      visitorId = (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : String(now) + "-" + Math.random().toString(36).slice(2);
+      localStorage.setItem(visitorKey, visitorId);
+    }
+    var session = null;
+    try { session = JSON.parse(sessionStorage.getItem(sessionKey) || "null"); } catch {}
+    if (!session || !session.id || now - Number(session.seenAt || 0) > 1800000) {
+      session = { id: (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : String(now) + "-" + Math.random().toString(36).slice(2), seenAt: now };
+    } else {
+      session.seenAt = now;
+    }
+    sessionStorage.setItem(sessionKey, JSON.stringify(session));
+    var query = new URLSearchParams(window.location.search);
+    var payload = JSON.stringify({ events: [{
+      id: (typeof crypto !== "undefined" && crypto.randomUUID) ? crypto.randomUUID() : String(now) + "-" + Math.random().toString(36).slice(2),
+      name: "page_view",
+      path: window.location.pathname + window.location.search,
+      routePath: window.location.pathname + window.location.search,
+      hostname: window.location.hostname,
+      visitorId: visitorId,
+      sessionId: session.id,
+      referrerHost: document.referrer ? new URL(document.referrer).host : null,
+      utmSource: query.get("utm_source"),
+      utmMedium: query.get("utm_medium"),
+      utmCampaign: query.get("utm_campaign"),
+      utmTerm: query.get("utm_term"),
+      utmContent: query.get("utm_content"),
+      occurredAt: new Date().toISOString(),
+      metadata: { title: document.title }
+    }] });
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon("/api/analytics/events", new Blob([payload], { type: "application/json" }));
+    } else {
+      fetch("/api/analytics/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: payload, keepalive: true }).catch(function(){});
+    }
+  } catch {}
+})();
+</script>`
+  return body.replace(/<\/head>/i, `${snippet}\n</head>`)
 }
 
 async function handleStaticRoundSite(request, env, requestUrl) {
@@ -1318,8 +1427,11 @@ function handleRuntime(request, requestUrl) {
   )
 }
 
-async function handleAnalytics(request, env) {
-  return handleAnalyticsRequest(request, env, { siteKey: '9router' })
+async function handleAnalytics(request, env, requestUrl = new URL(request.url)) {
+  const siteKey = requestUrl.hostname === LIVE_HOST || ALT_HOSTS.has(requestUrl.hostname)
+    ? '9router'
+    : managedSiteKeyFromHost(requestUrl.hostname)
+  return handleAnalyticsRequest(request, env, { siteKey })
 }
 
 function buildSitemapXml() {
@@ -1645,7 +1757,7 @@ async function handleQuickLaunchSite(request, env, requestUrl, config) {
   const headers = securityHeaders(request)
   headers.set('Content-Type', 'text/html; charset=utf-8')
   headers.set('Cache-Control', 'public, max-age=300')
-  return new Response(html, { status: 200, headers })
+  return new Response(injectMiroFishContextualBacklink(injectManagedAnalyticsSnippet(html), requestUrl), { status: 200, headers })
 }
 
 function normalizeManagedSitemapPath(rawPath) {
@@ -1774,6 +1886,8 @@ async function fetchAsset(request, env) {
 
 export async function handleRequest(request, env) {
   const requestUrl = new URL(request.url)
+  if (requestUrl.pathname === '/api/analytics/events') return handleAnalytics(request, env, requestUrl)
+
   if (requestUrl.hostname === 'saas-manager.clauxel.com') {
     if (requestUrl.pathname === '/api/runtime' || requestUrl.pathname === '/api/checkout') {
       return handleQuickLaunchSite(request, env, requestUrl, saasManagerPaymentConfig)
@@ -1821,7 +1935,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round27.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round27.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   const round17 = round17Sites.get(requestUrl.hostname)
@@ -1833,7 +1947,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round17.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round17.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   const round18 = round18Sites.get(requestUrl.hostname)
@@ -1845,7 +1959,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round18.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round18.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   const round22 = round22Sites.get(requestUrl.hostname)
@@ -1857,7 +1971,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round22.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round22.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   const round23 = round23Sites.get(requestUrl.hostname)
@@ -1869,7 +1983,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round23.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round23.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   const round24 = round24Sites.get(requestUrl.hostname)
@@ -1879,7 +1993,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round24.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round24.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   const round25 = round25Sites.get(requestUrl.hostname)
@@ -1891,7 +2005,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round25.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round25.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   if (requestUrl.hostname === 'www.nangointegrationops.space') {
@@ -1910,7 +2024,7 @@ export async function handleRequest(request, env) {
     if (publicMetadataResponse) return publicMetadataResponse
     const notFoundResponse = await maybeReturnManagedMarketingNotFound(request, siteEnv, requestUrl)
     if (notFoundResponse) return notFoundResponse
-    return round26.handler(request, siteEnv, requestUrl)
+    return withManagedStaticHtmlMetadata(await round26.handler(request, siteEnv, requestUrl), requestUrl)
   }
 
   if (request.method === 'OPTIONS') return handleOptions(request)
@@ -1928,7 +2042,6 @@ export async function handleRequest(request, env) {
 
   if (requestUrl.pathname === '/api/runtime') return handleRuntime(request, requestUrl)
   if (requestUrl.pathname === '/api/checkout') return handleCheckout(request, env, requestUrl)
-  if (requestUrl.pathname === '/api/analytics/events') return handleAnalytics(request, env)
 
   const redirect = maybeRedirectToHttps(requestUrl)
   if (redirect) return redirect
