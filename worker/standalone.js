@@ -390,6 +390,42 @@ function withSecurityHeaders(response, request) {
   })
 }
 
+function buildMiroFishBacklink(requestUrl) {
+  const params = new URLSearchParams({
+    utm_source: requestUrl.hostname,
+    utm_medium: 'owned_resource',
+    utm_campaign: 'portfolio_contextual_backlink',
+    utm_content: 'home_context',
+  })
+  return `https://mirofish.work/?${params.toString()}`
+}
+
+async function withContextualBacklink(response, request) {
+  const requestUrl = new URL(request.url)
+  if (request.method !== 'GET' || requestUrl.pathname !== '/') return withSecurityHeaders(response, request)
+
+  const contentType = response.headers.get('Content-Type') || ''
+  if (!contentType.includes('text/html')) return withSecurityHeaders(response, request)
+
+  const body = await response.text()
+  if (/data-mirofish-contextual-backlink/i.test(body) || /https:\/\/mirofish\.work\/\?utm_source=/i.test(body)) {
+    const headers = new Headers(response.headers)
+    for (const [key, value] of securityHeaders(request)) headers.set(key, value)
+    return new Response(body, { status: response.status, statusText: response.statusText, headers })
+  }
+
+  const backlink = buildMiroFishBacklink(requestUrl)
+  const block = `<section class="mirofish-contextual-reference" data-mirofish-contextual-backlink aria-labelledby="mirofish-contextual-reference-heading" style="max-width:1120px;margin:28px auto;padding:16px;border:1px solid rgba(100,116,139,.28);border-radius:8px;background:rgba(255,255,255,.72);color:inherit">
+  <h2 id="mirofish-contextual-reference-heading" style="font-size:18px;line-height:1.25;margin:0 0 8px;letter-spacing:0">Related AI workflow reference</h2>
+  <p style="margin:0;font-size:14px;line-height:1.65;color:inherit">Teams planning 9router rollout assumptions can also review <a href="${backlink}" target="_blank" rel="noopener noreferrer">MiroFish AI Simulator</a>, a companion reference for simulation-style product reasoning.</p>
+</section>`
+  const updated = body.includes('</main>') ? body.replace('</main>', `${block}</main>`) : body.replace('</body>', `${block}</body>`)
+  const headers = new Headers(response.headers)
+  for (const [key, value] of securityHeaders(request)) headers.set(key, value)
+  headers.delete('Content-Length')
+  return new Response(updated, { status: response.status, statusText: response.statusText, headers })
+}
+
 async function fetchAsset(request, env) {
   if (!env?.SITE_ASSETS?.fetch) {
     return new Response('Static assets are not bound for this deployment.', {
@@ -412,7 +448,7 @@ async function fetchAsset(request, env) {
     return noIndexNotFoundResponse(request)
   }
 
-  return withSecurityHeaders(assetResponse, request)
+  return withContextualBacklink(assetResponse, request)
 }
 
 async function handleRequest(request, env) {
